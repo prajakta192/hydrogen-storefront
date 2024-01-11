@@ -88,7 +88,7 @@ function resolveToFromType(
     COLLECTION: 'collections',
     COLLECTIONS: 'collections',
     FRONTPAGE: 'frontpage',
-    HTTP: '',
+    HTTP: 'collections',
     PAGE: 'pages',
     CATALOG: 'collections/all',
     PRODUCT: 'products',
@@ -117,6 +117,9 @@ function resolveToFromType(
 
     case type === 'COLLECTIONS':
       return `/${routePrefix.COLLECTIONS}`;
+
+case type === 'HTTP':
+      return `/${routePrefix.COLLECTIONS}/${handle}`;
 
     case type === 'SEARCH':
       return `/${routePrefix.SEARCH}`;
