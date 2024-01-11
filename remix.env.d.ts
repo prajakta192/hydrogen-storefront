@@ -1,7 +1,3 @@
-/// <reference types="@remix-run/dev" />
-/// <reference types="@shopify/remix-oxygen" />
-/// <reference types="@shopify/oxygen-workers-types" />
-
 import type {WithCache, HydrogenCart} from '@shopify/hydrogen';
 import type {Storefront} from '~/lib/type';
 import type {HydrogenSession} from '~/lib/session.server';
@@ -10,7 +6,7 @@ declare global {
   /**
    * A global `process` object is only available during build to access NODE_ENV.
    */
-  const process: {env: {NODE_ENV: 'production' | 'development'}};
+  const process: {env: {NODE_ENV: 'production' | 'development'} & Env};
 
   /**
    * Declare expected Env parameter in fetch handler.
@@ -24,23 +20,16 @@ declare global {
   }
 }
 
+/**
+ * Declare local additions to `AppLoadContext` to include the session utilities we injected in `server.ts`.
+ */
 declare module '@shopify/remix-oxygen' {
-  /**
-   * Declare local additions to the Remix loader context.
-   */
   export interface AppLoadContext {
     waitUntil: ExecutionContext['waitUntil'];
     session: HydrogenSession;
     storefront: Storefront;
     cart: HydrogenCart;
     env: Env;
-  }
-
-  /**
-   * Declare the data we expect to access via `context.session`.
-   */
-  export interface SessionData {
-    customerAccessToken: string;
   }
 }
 
