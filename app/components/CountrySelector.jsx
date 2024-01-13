@@ -46,20 +46,43 @@ export function CountrySelector() {
   }, []);
 
   return (
+    <>
+    <section className="md:col-span-3 lg:col-span">
+    <div className="footer-block--newsletter">
+      <div className="footer-block__newsletter">
+          <h2 className="footer-block__heading">Subscribe to our emails</h2>
+          <form method="post" action="/contact#ContactFooter" id="ContactFooter" acceptCharset="UTF-8" className="footer__newsletter newsletter-form">
+              <div className="newsletter-form__field-wrapper">
+                  <div className="field">
+                  <input id="NewsletterForm--footer" type="email" name="contact[email]" className="field__input"  aria-required="true" autoCorrect="off" autoCapitalize="none" autoComplete="email" placeholder="Email" required=""/>
+                  <label className="field__label" htmlFor="NewsletterForm--footer">
+                      
+                  </label>
+                  <button type="submit" className="newsletter-form__button field__button" name="commit" id="Subscribe" aria-label="Subscribe">
+                  <svg viewBox="0 0 14 10" fill="none" aria-hidden="true" focusable="false" role="presentation" className="icon icon-arrow" xmlns="http://www.w3.org/2000/svg">
+                     <path fillRule="evenodd" clipRule="evenodd" d="M8.537.808a.5.5 0 01.817-.162l4 4a.5.5 0 010 .708l-4 4a.5.5 0 11-.708-.708L11.793 5.5H1a.5.5 0 010-1h10.793L8.646 1.354a.5.5 0 01-.109-.546z" fill="currentColor"></path>
+                  </svg>
+               </button>
+                  </div>
+              </div>
+          </form>
+      </div>
+  </div>
+    </section>
     <section
       ref={observerRef}
-      className="grid w-full gap-4"
+      className="md:col-span-2 lg:col-span"
       onMouseLeave={closeDropdown}
     >
-      <Heading size="lead" className="cursor-default" as="h3">
-        Country
+      <Heading size="lead" className="cursor-default" as="h2">
+        Country/region
       </Heading>
       <div className="relative">
         <details
           className="absolute w-full border rounded border-contrast/30 dark:border-white open:round-b-none overflow-clip"
           ref={closeRef}
         >
-          <summary className="flex items-center justify-between w-full px-4 py-3 cursor-pointer">
+          <summary className="flex items-center justify-between w-full py-3 cursor-pointer">
             {selectedLocale.label}
           </summary>
           <div className="w-full overflow-auto border-t border-contrast/30 dark:border-white bg-contrast/30 max-h-36">
@@ -90,6 +113,7 @@ export function CountrySelector() {
         </details>
       </div>
     </section>
+    </>
   );
 }
 

@@ -61,9 +61,46 @@ shop-pay-button {
   * {
     font-variant-ligatures: none;
   }
-
+/*custom css*/
+.announcement-bar__message {
+  letter-spacing: .1rem;
+  font-size: .8rem;
+}
+p.announcement-bar__message{
+  text-align: center;
+}
+#shopify-section-announcement-bar .announcement-bar{
+    border-bottom: .1rem solid #ececec;
+}
+.topHeader header{
+  width: 100%;
+  justify-content: center;
+}
+#mainContent .swimlane{
+  display: flex;
+  justify-content: center;
+}
+.footer-block--newsletter .newsletter-form__field-wrapper{
+  position: relative;
+}
+.footer-block--newsletter .newsletter-form__field-wrapper  .newsletter-form__button {
+  position: absolute;
+  width: 4.4rem;
+  margin: 0;
+  left: 21%;
+  top: 0;
+  height: 100%;
+  z-index: 2;
+}
+.newsletter-form__button .icon{
+  width: 1rem;
+  height: 1rem;
+}
+footer{
+  border-top: 1px solid #ececec;
+}
   body {
-    @apply border-primary/10 bg-contrast text-primary/90 antialiased;
+   
   }
 
   html {

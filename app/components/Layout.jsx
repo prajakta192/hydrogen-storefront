@@ -20,7 +20,7 @@ import {
   Cart,
   CartLoading,
   Link,
-} from '~/components';
+Hero} from '~/components';
 import {useIsHomePath} from '~/lib/utils';
 import {useIsHydrated} from '~/hooks/useIsHydrated';
 import {useCartFetchers} from '~/hooks/useCartFetchers';
@@ -30,6 +30,7 @@ import {useRootLoaderData} from '~/root';
  * @param {LayoutProps}
  */
 export function Layout({children, layout}) {
+console.log('children', children)
   const {headerMenu, footerMenu} = layout || {};
   return (
     <>
@@ -39,11 +40,20 @@ export function Layout({children, layout}) {
             Skip to content
           </a>
         </div>
+        <div id="shopify-section-announcement-bar" className="shopify-section">
+            <div className="announcement-bar" role="region" aria-label="Announcement">
+            <div className="page-width">
+              <p className="announcement-bar__message center py-4">
+                  Welcome to our store
+              </p>
+              </div>
+        </div>
+        </div>
         {headerMenu && layout?.shop.name && (
           <Header title={layout.shop.name} menu={headerMenu} />
         )}
         <main role="main" id="mainContent" className="flex-grow">
-          {children}
+            {children}
         </main>
       </div>
       {footerMenu && <Footer menu={footerMenu} />}
@@ -177,14 +187,22 @@ function MobileHeader({title, isHome, openCart, openMenu}) {
   // useHeaderStyleFix(containerStyle, setContainerStyle, isHome);
 
   const params = useParams();
-
+/*<header
+      role="banner"
+      className={`${
+        isHome
+          ? 'bg-primary/80 light:bg-contrast/60 text-contrast light:text-primary shadow-darkHeader'
+          : 'bg-contrast/80 text-primary'
+      } flex lg:hidden items-center h-nav sticky backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-4 px-4 md:px-8`}
+    >
+*/
   return (
     <header
       role="banner"
       className={`${
         isHome
-          ? 'bg-primary/80 dark:bg-contrast/60 text-contrast dark:text-primary shadow-darkHeader'
-          : 'bg-contrast/80 text-primary'
+          ? 'bg-primary/80 light:bg-contrast/60 text-contrast light:text-primary'
+          : 'bg-contrast/80 text-contrast'
       } flex lg:hidden items-center h-nav sticky backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-4 px-4 md:px-8`}
     >
       <div className="flex items-center justify-start w-full gap-4">
@@ -251,12 +269,13 @@ function DesktopHeader({isHome, menu, openCart, title}) {
   const params = useParams();
   const {y} = useWindowScroll();
   return (
+    <div className='topHeader'>
     <header
       role="banner"
       className={`${
         isHome
-          ? 'bg-primary/80 dark:bg-contrast/60 text-contrast dark:text-primary shadow-darkHeader'
-          : 'bg-contrast/80 text-primary'
+          ? 'bg-primary/80 light:bg-contrast/60 text-contrast light:text-primary'
+          : 'light:bg-contrast/60 light:text-primary'
       } ${
         !isHome && y > 50 && ' shadow-lightHeader'
       } hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-8`}
@@ -281,8 +300,8 @@ function DesktopHeader({isHome, menu, openCart, title}) {
             </Link>
           ))}
         </nav>
-      </div>
-      <div className="flex items-center gap-1">
+     <div className="flex items-center gap-1">
+      <div>
         <Form
           method="get"
           action={params.locale ? `/${params.locale}/search` : '/search'}
@@ -306,10 +325,14 @@ function DesktopHeader({isHome, menu, openCart, title}) {
             <IconSearch />
           </button>
         </Form>
+      </div>
         <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5" />
         <CartCount isHome={isHome} openCart={openCart} />
       </div>
+      </div>
+     
     </header>
+    </div>
   );
 }
 
@@ -412,15 +435,20 @@ function Footer({menu}) {
     : [];
 
   return (
+    <>
+    
     <Section
       divider={isHome ? 'none' : 'top'}
       as="footer"
       role="contentinfo"
+      style={{border:'1px solid #ececec'}}
       className={`grid min-h-[25rem] items-start grid-flow-row w-full gap-6 py-8 px-6 md:px-8 lg:px-12 md:gap-8 lg:gap-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-${itemsCount}
-        bg-primary dark:bg-contrast dark:text-primary text-contrast overflow-hidden`}
+        bg-primary light:bg-contrast light:text-primary text-contrast overflow-hidden`}
     >
       <FooterMenu menu={menu} />
+      
       <CountrySelector />
+
       <div
         className={`self-end pt-8 opacity-50 md:col-span-2 lg:col-span-${itemsCount}`}
       >
@@ -428,9 +456,10 @@ function Footer({menu}) {
         Licensed Open Source project.
       </div>
     </Section>
+    </>
   );
 }
-
+ 
 /**
  * @param {{item: ChildEnhancedMenuItem}}
  */
@@ -454,6 +483,7 @@ function FooterLink({item}) {
  * @param {{menu?: EnhancedMenu}}
  */
 function FooterMenu({menu}) {
+  console.log('footermenu', menu)
   const styles = {
     section: 'grid gap-4',
     nav: 'grid gap-2 pb-6',
@@ -461,44 +491,67 @@ function FooterMenu({menu}) {
 
   return (
     <>
-      {(menu?.items || []).map((item) => (
-        <section key={item.id} className={styles.section}>
-          <Disclosure>
-            {({open}) => (
-              <>
-                <Disclosure.Button className="text-left md:cursor-default">
-                  <Heading className="flex justify-between" size="lead" as="h3">
-                    {item.title}
-                    {item?.items?.length > 0 && (
-                      <span className="md:hidden">
-                        <IconCaret direction={open ? 'up' : 'down'} />
-                      </span>
-                    )}
-                  </Heading>
-                </Disclosure.Button>
-                {item?.items?.length > 0 ? (
-                  <div
-                    className={`${
-                      open ? `max-h-48 h-fit` : `max-h-0 md:max-h-fit`
-                    } overflow-hidden transition-all duration-300`}
-                  >
-                    <Suspense data-comment="This suspense fixes a hydration bug in Disclosure.Panel with static prop">
-                      <Disclosure.Panel static>
-                        <nav className={styles.nav}>
-                          {item.items.map((subItem) => (
-                            <FooterLink key={subItem.id} item={subItem} />
-                          ))}
-                        </nav>
-                      </Disclosure.Panel>
-                    </Suspense>
-                  </div>
-                ) : null}
-              </>
-            )}
-          </Disclosure>
-        </section>
-      ))}
-    </>
+      <section>
+        <Heading className="flex justify-between" size="lead" as="h3">
+          Quik Link
+        </Heading>
+        <nav className={styles.nav}>
+           {(menu?.items || []).map((item) => (
+            <Link
+              key={item.id}
+              to={item.to}
+              target={item.target}
+              prefetch="intent"
+            
+            >
+           {item.title}
+              {item?.items?.length > 0 && (
+                <span className="md:hidden">
+                  <IconCaret direction={open ? 'up' : 'down'} />
+                </span>
+              )}
+               {item.items.map((subItem) => (
+                  <FooterLink key={subItem.id} item={subItem} />
+                ))}
+            </Link>
+))}
+        </nav>
+      </section>
+      <section>
+        <Heading className="flex justify-between" size="lead" as="h3">
+         Info
+        </Heading>
+        <nav className={styles.nav}>
+           {(menu?.items || []).map((item) => (
+            <Link
+              key={item.id}
+              to={item.to}
+              target={item.target}
+              prefetch="intent"
+            
+            >
+           {item.title}
+              {item?.items?.length > 0 && (
+                <span className="md:hidden">
+                  <IconCaret direction={open ? 'up' : 'down'} />
+                </span>
+              )}
+               {item.items.map((subItem) => (
+                  <FooterLink key={subItem.id} item={subItem} />
+                ))}
+            </Link>
+))}
+        </nav>
+      </section>
+      <section>
+        <Heading className="flex justify-between" size="lead" as="h3">
+         Our mission
+        </Heading>
+          <p>Share contact information, store details, and brand content with your customers.
+</p>
+      </section>
+  </>
+    
   );
 }
 

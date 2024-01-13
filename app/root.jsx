@@ -100,7 +100,7 @@ export default function App() {
   const data = useLoaderData();
   const locale = data.selectedLocale ?? DEFAULT_LOCALE;
   const hasUserConsent = true;
-
+//console.log('data',data)
   useAnalytics(hasUserConsent);
 
   return (
