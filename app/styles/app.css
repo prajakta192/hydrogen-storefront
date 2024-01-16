@@ -72,9 +72,21 @@ p.announcement-bar__message{
 #shopify-section-announcement-bar .announcement-bar{
     border-bottom: .1rem solid #ececec;
 }
-.topHeader header{
+.min-h-screen header div.flex:first-child{
   width: 100%;
   justify-content: center;
+  align-items: center;
+}
+.min-h-screen header nav a{
+  font-size: .75rem;
+}
+.min-h-screen .search-modal form{
+  border: 1px solid;
+}
+.min-h-screen .search-modal form input{
+  min-width: 350px;
+  min-height: 45px;
+
 }
 #mainContent .swimlane{
   display: flex;

@@ -59,8 +59,9 @@ export default function AllProducts() {
 
   return (
     <>
-      <PageHeader heading="All Products" variant="allCollections" />
+      
       <Section>
+      <PageHeader heading="All Products" variant="allCollections" />
         <Pagination connection={products}>
           {({nodes, isLoading, NextLink, PreviousLink}) => {
             const itemsMarkup = nodes.map((product, i) => (
@@ -73,11 +74,12 @@ export default function AllProducts() {
 
             return (
               <>
-                <div className="flex items-center justify-center mt-6">
+                {/*<div className="flex items-center justify-center mt-6">
                   <PreviousLink className="inline-block rounded font-medium text-center py-3 px-6 border border-primary/10 bg-contrast text-primary w-full">
                     {isLoading ? 'Loading...' : 'Previous'}
                   </PreviousLink>
-                </div>
+                </div>*/}
+              
                 <Grid data-test="product-grid">{itemsMarkup}</Grid>
                 <div className="flex items-center justify-center mt-6">
                   <NextLink className="inline-block rounded font-medium text-center py-3 px-6 border border-primary/10 bg-contrast text-primary w-full">

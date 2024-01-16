@@ -1,7 +1,7 @@
 import {useParams, Form, Await} from '@remix-run/react';
 import {useWindowScroll} from 'react-use';
 import {Disclosure} from '@headlessui/react';
-import {Suspense, useEffect, useMemo} from 'react';
+import {Suspense, useEffect, useMemo, useState} from 'react';
 import {CartForm} from '@shopify/hydrogen';
 import {
   Drawer,
@@ -12,6 +12,7 @@ import {
   IconAccount,
   IconBag,
   IconSearch,
+  IconClose,
   Heading,
   IconMenu,
   IconCaret,
@@ -30,7 +31,7 @@ import {useRootLoaderData} from '~/root';
  * @param {LayoutProps}
  */
 export function Layout({children, layout}) {
-console.log('children', children)
+//console.log('children', children)
   const {headerMenu, footerMenu} = layout || {};
   return (
     <>
@@ -112,6 +113,7 @@ function Header({title, menu}) {
 /**
  * @param {{isOpen: boolean; onClose: () => void}}
  */
+
 function CartDrawer({isOpen, onClose}) {
   const rootData = useRootLoaderData();
 
@@ -232,7 +234,7 @@ function MobileHeader({title, isHome, openCart, openMenu}) {
             type="search"
             variant="minisearch"
             placeholder="Search"
-            name="q"
+            name="q" 
           />
         </Form>
       </div>
@@ -268,8 +270,16 @@ function MobileHeader({title, isHome, openCart, openMenu}) {
 function DesktopHeader({isHome, menu, openCart, title}) {
   const params = useParams();
   const {y} = useWindowScroll();
+  const[hidden, setHidden] = useState(false)
+  function openSearch() {
+    setHidden(!hidden)
+  }
+  function closeSearch(){
+    setHidden(!hidden)
+  }
   return (
-    <div className='topHeader'>
+   <>
+   {!hidden &&
     <header
       role="banner"
       className={`${
@@ -284,7 +294,7 @@ function DesktopHeader({isHome, menu, openCart, title}) {
         <Link className="font-bold" to="/" prefetch="intent">
           {title}
         </Link>
-        <nav className="flex gap-8">
+        <nav className="flex gap-12">
           {/* Top level menu items */}
           {(menu?.items || []).map((item) => (
             <Link
@@ -301,38 +311,56 @@ function DesktopHeader({isHome, menu, openCart, title}) {
           ))}
         </nav>
      <div className="flex items-center gap-1">
-      <div>
-        <Form
-          method="get"
-          action={params.locale ? `/${params.locale}/search` : '/search'}
-          className="flex items-center gap-2"
-        >
-          <Input
-            className={
-              isHome
-                ? 'focus:border-contrast/20 dark:focus:border-primary/20'
-                : 'focus:border-primary/20'
-            }
-            type="search"
-            variant="minisearch"
-            placeholder="Search"
-            name="q"
-          />
+    
+       
           <button
-            type="submit"
             className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5"
+            onClick={openSearch}
           >
             <IconSearch />
           </button>
-        </Form>
-      </div>
+      
         <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5" />
         <CartCount isHome={isHome} openCart={openCart} />
       </div>
       </div>
      
     </header>
+  }
+    { hidden &&
+    <div className="flex items-center gap-1 search-modal justify-center py-8">
+        <Form
+          method="get"
+          action={params.locale ? `/${params.locale}/search` : '/search'}
+          className="flex items-center gap-2"
+        >
+        
+          <Input
+            className={
+              isHome 
+                ? 'focus:border-contrast/20 dark:focus:border-primary/20'
+                : 'focus:border-primary/20 '
+            }
+            type="search"
+            variant="minisearch"
+            placeholder="Search"
+            name="q"
+          />
+
+          <button
+            type='submit'
+            className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5"
+            
+          >
+            <IconSearch/>
+          </button>
+        </Form>
+        <button className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5">
+        <IconClose onClick={closeSearch}/>
+        </button>
     </div>
+}
+    </>
   );
 }
 
@@ -483,7 +511,7 @@ function FooterLink({item}) {
  * @param {{menu?: EnhancedMenu}}
  */
 function FooterMenu({menu}) {
-  console.log('footermenu', menu)
+  //console.log('footermenu', menu)
   const styles = {
     section: 'grid gap-4',
     nav: 'grid gap-2 pb-6',
@@ -568,3 +596,4 @@ function FooterMenu({menu}) {
 /** @typedef {import('storefrontapi.generated').LayoutQuery} LayoutQuery */
 /** @typedef {import('~/lib/utils').EnhancedMenu} EnhancedMenu */
 /** @typedef {import('~/lib/utils').ChildEnhancedMenuItem} ChildEnhancedMenuItem */
+
