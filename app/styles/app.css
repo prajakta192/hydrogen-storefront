@@ -86,7 +86,10 @@ p.announcement-bar__message{
 .min-h-screen .search-modal form input{
   min-width: 350px;
   min-height: 45px;
-
+  
+}
+#mainContent header{
+  display: none;
 }
 #mainContent .swimlane{
   display: flex;

@@ -348,7 +348,6 @@ function DesktopHeader({isHome, menu, openCart, title}) {
           />
 
           <button
-            type='submit'
             className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5"
             
           >
