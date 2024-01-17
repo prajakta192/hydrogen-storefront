@@ -69,24 +69,11 @@ shop-pay-button {
 p.announcement-bar__message{
   text-align: center;
 }
-#shopify-section-announcement-bar .announcement-bar{
-    border-bottom: .1rem solid #ececec;
-}
-.min-h-screen header div.flex:first-child{
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-}
 .min-h-screen header nav a{
-  font-size: .75rem;
+  font-size: .9rem;
 }
 .min-h-screen .search-modal form{
   border: 1px solid;
-}
-.min-h-screen .search-modal form input{
-  min-width: 350px;
-  min-height: 45px;
-  
 }
 #mainContent header{
   display: none;
@@ -100,19 +87,16 @@ p.announcement-bar__message{
 }
 .footer-block--newsletter .newsletter-form__field-wrapper  .newsletter-form__button {
   position: absolute;
-  width: 4.4rem;
+  width: 1.5rem;
   margin: 0;
-  left: 21%;
   top: 0;
+  right: -10px;
   height: 100%;
   z-index: 2;
 }
 .newsletter-form__button .icon{
   width: 1rem;
   height: 1rem;
-}
-footer{
-  border-top: 1px solid #ececec;
 }
   body {
    

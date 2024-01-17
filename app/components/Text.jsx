@@ -93,7 +93,7 @@ export function Heading({
   const styles = clsx(
     missingClass(className, 'whitespace-') && 'whitespace-pre-wrap',
     missingClass(className, 'max-w-') && widths[width],
-    missingClass(className, 'font-') && sizes[size],
+    missingClass(className, 'font-') && sizes,
     className,
   );
 
@@ -125,9 +125,9 @@ export function Section({
   heading,
   padding = 'all',
   ...props
-}) {
+}) { 
   const paddings = {
-    x: 'px-6 md:px-8 lg:px-12',
+    x: 'px-4 md:px-4 lg:px-14',
     y: 'py-6 md:py-8 lg:py-12',
     swimlane: 'pt-4 md:pt-8 lg:pt-12 md:pb-4 lg:pb-8',
     all: 'p-6 md:p-6 lg:p-6',
@@ -146,7 +146,7 @@ export function Section({
   };
 
   const styles = clsx(
-    'w-full gap-4 md:gap-8',
+    'w-full gap-4 md:gap-8 lg:px-14 md:px-8 px-4',
     displays[display],
     missingClass(className, '\\mp[xy]?-') && paddings[padding],
     dividers[divider],
@@ -156,7 +156,8 @@ export function Section({
   return (
     <Component {...props} className={styles}>
       {heading && (
-        <Heading size="lead" className={padding === 'y' ? paddings['x'] : ''}>
+        /*<Heading size="lead" className={padding === 'y' ? paddings['x'] : ''}>*/
+        <Heading size='lead' className='font-blod'>
           {heading}
         </Heading>
       )}

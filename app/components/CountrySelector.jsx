@@ -47,10 +47,11 @@ export function CountrySelector() {
 
   return (
     <>
-    <section className="md:col-span-3 lg:col-span">
+    {/*<section className="md:col-span-3 lg:col-span">*/}
+    <section>
     <div className="footer-block--newsletter">
       <div className="footer-block__newsletter">
-          <h2 className="footer-block__heading">Subscribe to our emails</h2>
+          <h2 className="footer-block__heading font-bold">Subscribe to our emails</h2>
           <form method="post" action="/contact#ContactFooter" id="ContactFooter" acceptCharset="UTF-8" className="footer__newsletter newsletter-form">
               <div className="newsletter-form__field-wrapper">
                   <div className="field">
@@ -69,12 +70,16 @@ export function CountrySelector() {
       </div>
   </div>
     </section>
-    <section
+    {/*<section
       ref={observerRef}
       className="md:col-span-2 lg:col-span"
       onMouseLeave={closeDropdown}
+    >*/}
+    <section
+      ref={observerRef}
+      onMouseLeave={closeDropdown}
     >
-      <Heading size="lead" className="cursor-default" as="h2">
+      <Heading size="lead" className="cursor-default font-bold" as="h2">
         Country/region
       </Heading>
       <div className="relative">

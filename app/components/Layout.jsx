@@ -35,14 +35,14 @@ export function Layout({children, layout}) {
   const {headerMenu, footerMenu} = layout || {};
   return (
     <>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen border-b">
         <div className="">
           <a href="#mainContent" className="sr-only">
             Skip to content
           </a>
         </div>
         <div id="shopify-section-announcement-bar" className="shopify-section">
-            <div className="announcement-bar" role="region" aria-label="Announcement">
+            <div className="announcement-bar border-b" role="region" aria-label="Announcement">
             <div className="page-width">
               <p className="announcement-bar__message center py-4">
                   Welcome to our store
@@ -67,6 +67,13 @@ export function Layout({children, layout}) {
  */
 function Header({title, menu}) {
   const isHome = useIsHomePath();
+  const[hidden, setHidden] = useState(false)
+  function openSearch() {
+    setHidden(!hidden)
+  }
+  function closeSearch(){
+    setHidden(!hidden)
+  }
 
   const {
     isOpen: isCartOpen,
@@ -99,12 +106,18 @@ function Header({title, menu}) {
         title={title}
         menu={menu}
         openCart={openCart}
+        openSearch={openSearch}
+        closeSearch={closeSearch}
+        hidden={hidden}
       />
       <MobileHeader
         isHome={isHome}
         title={title}
         openCart={openCart}
         openMenu={openMenu}
+        openSearch={openSearch}
+        closeSearch={closeSearch}
+        hidden={hidden}
       />
     </>
   );
@@ -185,7 +198,7 @@ function MenuMobileNav({menu, onClose}) {
  *   openMenu: () => void;
  * }}
  */
-function MobileHeader({title, isHome, openCart, openMenu}) {
+function MobileHeader({title, isHome, openCart, openMenu,openSearch,closeSearch,hidden}) {
   // useHeaderStyleFix(containerStyle, setContainerStyle, isHome);
 
   const params = useParams();
@@ -199,44 +212,24 @@ function MobileHeader({title, isHome, openCart, openMenu}) {
     >
 */
   return (
+    <>
+    {!hidden &&
     <header
       role="banner"
       className={`${
         isHome
-          ? 'bg-primary/80 light:bg-contrast/60 text-contrast light:text-primary'
-          : 'bg-contrast/80 text-contrast'
-      } flex lg:hidden items-center h-nav sticky backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-4 px-4 md:px-8`}
+          ? 'light:bg-contrast/60  light:text-primary'
+          : 'bg-contrast/80'
+      } border-b flex lg:hidden items-center h-nav sticky z-40 top-0 justify-between w-full leading-none gap-4 px-2 md:px-8`}
     >
-      <div className="flex items-center justify-start w-full gap-4">
+      <div className="">
         <button
           onClick={openMenu}
-          className="relative flex items-center justify-center w-8 h-8"
+          className="flex items-center justify-center w-8 h-8"
         >
           <IconMenu />
         </button>
-        <Form
-          method="get"
-          action={params.locale ? `/${params.locale}/search` : '/search'}
-          className="items-center gap-2 sm:flex"
-        >
-          <button
-            type="submit"
-            className="relative flex items-center justify-center w-8 h-8"
-          >
-            <IconSearch />
-          </button>
-          <Input
-            className={
-              isHome
-                ? 'focus:border-contrast/20 dark:focus:border-primary/20'
-                : 'focus:border-primary/20'
-            }
-            type="search"
-            variant="minisearch"
-            placeholder="Search"
-            name="q" 
-          />
-        </Form>
+       
       </div>
 
       <Link
@@ -251,11 +244,50 @@ function MobileHeader({title, isHome, openCart, openMenu}) {
         </Heading>
       </Link>
 
-      <div className="flex items-center justify-end w-full gap-4">
+      <div className="flex items-center justify-end">
+      <button
+            className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5"
+            onClick={openSearch}
+          >
+            <IconSearch />
+          </button>
         <AccountLink className="relative flex items-center justify-center w-8 h-8" />
         <CartCount isHome={isHome} openCart={openCart} />
       </div>
     </header>
+  }
+  {hidden &&
+  <div className="flex items-center gap-1 search-modal justify-center py-2 px-2 border-b lg:hidden">
+     <Form
+          method="get"
+          action={params.locale ? `/${params.locale}/search` : '/search'}
+          className="items-center gap-2 flex"
+        >
+          
+          <Input
+            className={
+              isHome
+                ? 'focus:border-contrast/20 dark:focus:border-primary/20'
+                : 'focus:border-primary/20'
+            }
+            type="search"
+            variant="minisearch"
+            placeholder="Search"
+            name="q" 
+          />
+          <button
+            type="submit"
+            className="relative flex items-center justify-center w-8 h-8"
+          >
+            <IconSearch />
+          </button>
+        </Form>
+        <button className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5">
+        <IconClose onClick={closeSearch}/>
+        </button>
+        </div>
+}
+</>
   );
 }
 
@@ -267,16 +299,23 @@ function MobileHeader({title, isHome, openCart, openMenu}) {
  *   title: string;
  * }}
  */
-function DesktopHeader({isHome, menu, openCart, title}) {
+function DesktopHeader({isHome, menu, openCart, title,openSearch,closeSearch,hidden}) {
   const params = useParams();
   const {y} = useWindowScroll();
-  const[hidden, setHidden] = useState(false)
-  function openSearch() {
-    setHidden(!hidden)
-  }
-  function closeSearch(){
-    setHidden(!hidden)
-  }
+  
+
+  /*
+ <header
+      role="banner"
+      className={`${
+        isHome
+          ? 'bg-primary/80 light:bg-contrast/60 text-contrast light:text-primary'
+          : 'light:bg-contrast/60 light:text-primary'
+      } ${
+        !isHome && y > 50 && ' shadow-lightHeader'
+      } hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-8`}
+    >
+  */
   return (
    <>
    {!hidden &&
@@ -288,9 +327,9 @@ function DesktopHeader({isHome, menu, openCart, title}) {
           : 'light:bg-contrast/60 light:text-primary'
       } ${
         !isHome && y > 50 && ' shadow-lightHeader'
-      } hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-8`}
+      } hidden h-nav lg:flex border-b items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 w-full leading-none px-4 py-8 lg:px-14`}
     >
-      <div className="flex gap-12">
+      <div className="lg:flex gap-12 justify-between items-center w-full">
         <Link className="font-bold" to="/" prefetch="intent">
           {title}
         </Link>
@@ -310,9 +349,7 @@ function DesktopHeader({isHome, menu, openCart, title}) {
             </Link>
           ))}
         </nav>
-     <div className="flex items-center gap-1">
-    
-       
+     <div className="flex items-center gap-1">  
           <button
             className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5"
             onClick={openSearch}
@@ -324,15 +361,16 @@ function DesktopHeader({isHome, menu, openCart, title}) {
         <CartCount isHome={isHome} openCart={openCart} />
       </div>
       </div>
-     
     </header>
   }
-    { hidden &&
-    <div className="flex items-center gap-1 search-modal justify-center py-8">
+    { hidden && 
+    <div className={`flex items-center gap-1 search-modal border-b justify-center py-8 ${
+        !isHome && y > 50 && ' shadow-lightHeader'
+      } hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 w-full leading-none py-4`}>
         <Form
           method="get"
           action={params.locale ? `/${params.locale}/search` : '/search'}
-          className="flex items-center gap-2"
+          className="flex items-center"
         >
         
           <Input
@@ -454,10 +492,18 @@ function Badge({openCart, dark, count}) {
  * @param {{menu?: EnhancedMenu}}
  */
 function Footer({menu}) {
+  console.log(menu)
   const isHome = useIsHomePath();
-  const itemsCount = menu
+  /*
+    const itemsCount = menu
     ? menu?.items?.length + 1 > 4
       ? 4
+      : menu?.items?.length + 1
+    : [];
+  */
+  const itemsCount = menu
+    ? menu?.items?.length + 1 >= 4
+      ? 5
       : menu?.items?.length + 1
     : [];
 
@@ -469,18 +515,20 @@ function Footer({menu}) {
       as="footer"
       role="contentinfo"
       style={{border:'1px solid #ececec'}}
-      className={`grid min-h-[25rem] items-start grid-flow-row w-full gap-6 py-8 px-6 md:px-8 lg:px-12 md:gap-8 lg:gap-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-${itemsCount}
-        bg-primary light:bg-contrast light:text-primary text-contrast overflow-hidden`}
+      className={`py-8 px-6 md:px-8 lg:px-12 min-h-[20rem] bg-primary light:bg-contrast light:text-primary text-contrast overflow-hidden`}
     >
+    <div className={`grid border-b pb-8 items-start grid-flow-row w-full gap-6 md:gap-8 lg:gap-12 grid-cols-1 md:grid-cols-3 lg:grid-cols-${itemsCount}`}>
       <FooterMenu menu={menu} />
-      
       <CountrySelector />
-
+    </div>
+    
       <div
-        className={`self-end pt-8 opacity-50 md:col-span-2 lg:col-span-${itemsCount}`}
+        className={`self-start opacity-50 text-center`}
       >
+      <p>
         &copy; {new Date().getFullYear()} / Shopify, Inc. Hydrogen is an MIT
         Licensed Open Source project.
+        </p>
       </div>
     </Section>
     </>
@@ -519,7 +567,7 @@ function FooterMenu({menu}) {
   return (
     <>
       <section>
-        <Heading className="flex justify-between" size="lead" as="h3">
+        <Heading className="flex justify-between font-bold" size="lead" as="h3">
           Quik Link
         </Heading>
         <nav className={styles.nav}>
@@ -545,7 +593,7 @@ function FooterMenu({menu}) {
         </nav>
       </section>
       <section>
-        <Heading className="flex justify-between" size="lead" as="h3">
+        <Heading className="flex justify-between font-bold" size="lead" as="h3">
          Info
         </Heading>
         <nav className={styles.nav}>
@@ -571,11 +619,11 @@ function FooterMenu({menu}) {
         </nav>
       </section>
       <section>
-        <Heading className="flex justify-between" size="lead" as="h3">
+        <Heading className="flex justify-between font-bold" size="lead" as="h3">
          Our mission
         </Heading>
           <p>Share contact information, store details, and brand content with your customers.
-</p>
+          </p>
       </section>
   </>
     
