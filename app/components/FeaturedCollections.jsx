@@ -16,6 +16,7 @@ export function FeaturedCollections({
 
   return (
     <Section {...props} heading={title}>
+    <Heading size="copy">title</Heading>
       <Grid items={collectionsWithImage.length}>
         {collectionsWithImage.map((collection) => {
           return (

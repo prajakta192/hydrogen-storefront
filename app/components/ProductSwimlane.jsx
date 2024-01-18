@@ -1,4 +1,4 @@
-import {ProductCard, Section} from '~/components';
+import {ProductCard, Section, Grid} from '~/components';
 
 const mockProducts = {
   nodes: new Array(12).fill(''),
@@ -7,6 +7,7 @@ const mockProducts = {
 /**
  * @param {ProductSwimlaneProps}
  */
+
 export function ProductSwimlane({
   title = 'Featured Products',
   products = mockProducts,
@@ -14,17 +15,18 @@ export function ProductSwimlane({
   ...props
 }) {
   //<div className="swimlane hiddenScroll md:pb-8 md:scroll-px-8 lg:scroll-px-12 md:px-8 lg:px-12">
+
   return (
     <Section heading={title} padding="y" {...props}>
-      <div className="swimlane  md:pb-8 md:scroll-px-8 lg:scroll-px-12 md:px-8 lg:px-12">
+      <Grid items={products.length}>
         {products.nodes.map((product) => (
           <ProductCard
             product={product}
             key={product.id}
-            className="snap-start w-80"
+            className="snap-start "
           />
         ))}
-      </div>
+      </Grid>
     </Section>
   );
 }

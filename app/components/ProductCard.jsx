@@ -23,7 +23,7 @@ export function ProductCard({
   quickAdd,
 }) {
   let cardLabel;
-
+  // console.log(product)
   const cardProduct = product?.variants ? product : getProductPlaceholder();
   if (!cardProduct?.variants?.nodes?.length) return null;
 

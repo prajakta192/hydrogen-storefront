@@ -492,7 +492,7 @@ function Badge({openCart, dark, count}) {
  * @param {{menu?: EnhancedMenu}}
  */
 function Footer({menu}) {
-  console.log(menu)
+  // console.log(menu)
   const isHome = useIsHomePath();
   /*
     const itemsCount = menu

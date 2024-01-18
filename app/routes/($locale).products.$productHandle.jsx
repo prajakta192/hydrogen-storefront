@@ -137,10 +137,10 @@ export default function Product() {
   return (
     <>
       <Section className="px-0 md:px-8 lg:px-12">
-        <div className="grid items-start md:gap-6 lg:gap-20 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid items-start md:gap-6 lg:gap-20 md:grid-cols-2 lg:grid-cols-2">
           <ProductGallery
             media={media.nodes}
-            className="w-full lg:col-span-2"
+            className="w-full lg:col-span-1"
           />
           <div className="sticky md:-mb-nav md:top-nav md:-translate-y-nav md:h-screen md:pt-nav hiddenScroll md:overflow-y-scroll">
             <section className="flex flex-col w-full max-w-xl gap-8 p-6 md:mx-auto md:max-w-sm md:px-0">
@@ -317,9 +317,8 @@ export function ProductForm({variants}) {
                         prefetch="intent"
                         replace
                         className={clsx(
-                          'leading-none py-1 border-b-[1.5px] cursor-pointer transition-all duration-200',
-                          isActive ? 'border-primary/50' : 'border-primary/0',
-                          isAvailable ? 'opacity-100' : 'opacity-50',
+                          'leading-none py-1 px-2 cursor-pointer transition-all duration-200 border',
+                          isAvailable ? 'opacity-100' : 'opacity-80',
                         )}
                       >
                         {value}
@@ -396,7 +395,7 @@ export function ProductForm({variants}) {
  */
 function ProductDetail({title, content, learnMore}) {
   return (
-    <Disclosure key={title} as="div" className="grid w-full gap-2">
+    <Disclosure key={title} as="div" className="grid w-full gap-2" defaultOpen='true'>
       {({open}) => (
         <>
           <Disclosure.Button className="text-left">
@@ -415,7 +414,8 @@ function ProductDetail({title, content, learnMore}) {
 
           <Disclosure.Panel className={'pb-4 pt-2 grid gap-2'}>
             <div
-              className="prose dark:prose-invert"
+              // className="prose dark:prose-invert"
+            className='text-contrast opacity-50'
               dangerouslySetInnerHTML={{__html: content}}
             />
             {learnMore && (
