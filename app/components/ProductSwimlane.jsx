@@ -23,7 +23,7 @@ export function ProductSwimlane({
           <ProductCard
             product={product}
             key={product.id}
-            className="snap-start w-70"
+            className="snap-start"
           />
         ))}
       </Grid>
