@@ -35,7 +35,7 @@ export function Layout({children, layout}) {
   const {headerMenu, footerMenu} = layout || {};
   return (
     <>
-      <div className="flex flex-col min-h-screen border-b">
+      <div className="flex flex-col min-h-screen border-b mainNav">
         <div className="">
           <a href="#mainContent" className="sr-only">
             Skip to content
@@ -303,19 +303,6 @@ function DesktopHeader({isHome, menu, openCart, title,openSearch,closeSearch,hid
   const params = useParams();
   const {y} = useWindowScroll();
   
-
-  /*
- <header
-      role="banner"
-      className={`${
-        isHome
-          ? 'bg-primary/80 light:bg-contrast/60 text-contrast light:text-primary'
-          : 'light:bg-contrast/60 light:text-primary'
-      } ${
-        !isHome && y > 50 && ' shadow-lightHeader'
-      } hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-8`}
-    >
-  */
   return (
    <>
    {!hidden &&
@@ -326,7 +313,7 @@ function DesktopHeader({isHome, menu, openCart, title,openSearch,closeSearch,hid
           ? 'bg-primary/80 light:bg-contrast/60 text-contrast light:text-primary'
           : 'light:bg-contrast/60 light:text-primary'
       } ${
-        !isHome && y > 50 && ' shadow-lightHeader'
+        !isHome && y > 50 && 'shadow-lightHeader'
       } hidden h-nav lg:flex border-b items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 w-full leading-none px-4 py-8 lg:px-14`}
     >
       <div className="lg:flex gap-12 justify-between items-center w-full">
@@ -502,8 +489,8 @@ function Footer({menu}) {
     : [];
   */
   const itemsCount = menu
-    ? menu?.items?.length + 1 >= 4
-      ? 5
+    ? menu?.items?.length + 1 > 4
+      ? 4
       : menu?.items?.length + 1
     : [];
 
@@ -519,6 +506,28 @@ function Footer({menu}) {
     >
     <div className={`grid border-b pb-8 items-start grid-flow-row w-full gap-6 md:gap-8 lg:gap-12 grid-cols-1 md:grid-cols-3 lg:grid-cols-${itemsCount}`}>
       <FooterMenu menu={menu} />
+       <section>
+    <div className="footer-block--newsletter">
+      <div className="footer-block__newsletter">
+          <h2 className="footer-block__heading font-bold">Subscribe to our emails</h2>
+          <form method="post" action="/contact#ContactFooter" id="ContactFooter" acceptCharset="UTF-8" className="footer__newsletter newsletter-form">
+              <div className="newsletter-form__field-wrapper">
+                  <div className="field">
+                  <input id="NewsletterForm--footer" type="email" name="contact[email]" className="field__input"  aria-required="true" autoCorrect="off" autoCapitalize="none" autoComplete="email" placeholder="Email" required=""/>
+                  <label className="field__label" htmlFor="NewsletterForm--footer">
+                      
+                  </label>
+                  <button type="submit" className="newsletter-form__button field__button lg-field__button" name="commit" id="Subscribe" aria-label="Subscribe">
+                  <svg viewBox="0 0 14 10" fill="none" aria-hidden="true" focusable="false" role="presentation" className="icon icon-arrow" xmlns="http://www.w3.org/2000/svg">
+                     <path fillRule="evenodd" clipRule="evenodd" d="M8.537.808a.5.5 0 01.817-.162l4 4a.5.5 0 010 .708l-4 4a.5.5 0 11-.708-.708L11.793 5.5H1a.5.5 0 010-1h10.793L8.646 1.354a.5.5 0 01-.109-.546z" fill="currentColor"></path>
+                  </svg>
+               </button>
+                  </div>
+              </div>
+          </form>
+      </div>
+  </div>
+    </section>
       <CountrySelector />
     </div>
     

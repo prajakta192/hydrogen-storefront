@@ -8,33 +8,45 @@ import {
 } from '@remix-run/react';
 import {useDebounce} from 'react-use';
 
-import {Heading, IconFilters, IconCaret, IconXMark, Text,CollectionFilter} from '~/components';
+import {Heading, IconFilters, IconCaret, IconXMark, Text} from '~/components';
 export const FILTER_URL_PREFIX = 'filter.';
 
 /**
  * @param {Props}
  */
 export function SortFilter({
+  filters,
   appliedFilters = [],
   children,
   products = [],
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  
-  // console.log('products',products, 'filter',filters)
+  console.log('filter',products)
   return (
     <>
-      <div className="flex items-center justify-between w-full filterContainer">
-        
-           <div className="flex flex-col flex-wrap md:flex-row">
-          <div>
-          <CollectionFilter/>
-        </div>
-        <div className="flex-1">{children} </div>
-      </div>
+      <div className="flex items-center justify-between w-full">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={
+            'relative flex items-center justify-center w-8 h-8 focus:ring-primary/5'
+          }
+        >
+          <IconFilters />
+        </button>
         <SortMenu />
       </div>
-     
+      <div className="flex flex-col flex-wrap md:flex-row">
+        <div
+          className={`transition-all duration-200 ${
+            isOpen
+              ? 'opacity-100 min-w-full md:min-w-[240px] md:w-[240px] md:pr-8 max-h-full'
+              : 'opacity-0 md:min-w-[0px] md:w-[0px] pr-0 max-h-0 md:max-h-full'
+          }`}
+        >
+          <FiltersDrawer filters={filters} appliedFilters={appliedFilters} />
+        </div>
+        <div className="flex-1">{children}</div>
+      </div>
     </>
   );
 }
@@ -42,7 +54,75 @@ export function SortFilter({
 /**
  * @param {Omit<Props, 'children'>}
  */
+export function FiltersDrawer({filters = [], appliedFilters = []}) {
+  const [params] = useSearchParams();
+  const location = useLocation();
 
+  const filterMarkup = (filter, option) => {
+    switch (filter.type) {
+      case 'PRICE_RANGE':
+        const priceFilter = params.get(`${FILTER_URL_PREFIX}price`);
+        const price = priceFilter ? JSON.parse(priceFilter) : undefined;
+        const min = isNaN(Number(price?.min)) ? undefined : Number(price?.min);
+        const max = isNaN(Number(price?.max)) ? undefined : Number(price?.max);
+
+        return <PriceRangeFilter min={min} max={max} />;
+
+      default:
+        const to = getFilterLink(option.input, params, location);
+        return (
+          <Link
+            className="focus:underline hover:underline"
+            prefetch="intent"
+            to={to}
+          >
+            {option.label}
+          </Link>
+        );
+    }
+  };
+
+  return (
+    <>
+      <nav className="py-8">
+        {appliedFilters.length > 0 ? (
+          <div className="pb-8">
+            <AppliedFilters filters={appliedFilters} />
+          </div>
+        ) : null}
+
+        <Heading as="h4" size="lead">
+          Filter By
+        </Heading>
+        <div className="divide-y">
+          {filters.map((filter) => (
+            <Disclosure as="div" key={filter.id} className="w-full">
+              {({open}) => (
+                <>
+                  <Disclosure.Button className="flex justify-between w-full py-4">
+                    <Text size="lead">{filter.label}</Text>
+                    <IconCaret direction={open ? 'up' : 'down'} />
+                  </Disclosure.Button>
+                  <Disclosure.Panel key={filter.id}>
+                    <ul key={filter.id} className="py-2">
+                      {filter.values?.map((option) => {
+                        return (
+                          <li key={option.id} className="pb-4">
+                            {filterMarkup(filter, option)}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </Disclosure.Panel>
+                </>
+              )}
+            </Disclosure>
+          ))}
+        </div>
+      </nav>
+    </>
+  );
+}
 
 /**
  * @param {{filters: AppliedFilter[]}}
@@ -106,7 +186,7 @@ function getSortLink(sort, params, location) {
  */
 function getFilterLink(rawInput, params, location) {
   const paramsClone = new URLSearchParams(params);
-   const newParams = filterInputToParams(rawInput, paramsClone);
+  const newParams = filterInputToParams(rawInput, paramsClone);
   return `${location.pathname}?${newParams.toString()}`;
 }
 
@@ -215,20 +295,20 @@ export default function SortMenu() {
   const items = [
     {label: 'Featured', key: 'featured'},
     {
-      label: 'Alphabetically A-Z',
-      key: 'alphabetically-A-Z',
-    },
-    {
-      label: 'Alphabetically Z-A',
-      key: 'alphabetically-Z-A',
-    },
-    {
       label: 'Price, Low - High',
       key: 'price-low-high',
     },
     {
       label: 'Price, High - Low',
       key: 'price-high-low',
+    },
+    {
+      label: 'Best Selling',
+      key: 'best-selling',
+    },
+    {
+      label: 'Newest',
+      key: 'newest',
     },
   ];
   const [params] = useSearchParams();
@@ -238,16 +318,16 @@ export default function SortMenu() {
   return (
     <Menu as="div" className="relative z-40">
       <Menu.Button className="flex items-center">
-        <span className="px-3">
-          <span className="px-2 customFilters">Sort by :</span>
-          <span className='customFilters'>{(activeItem || items[0]).label}</span>
+        <span className="px-2">
+          <span className="px-2 font-medium">Sort by:</span>
+          <span>{(activeItem || items[0]).label}</span>
         </span>
         <IconCaret />
       </Menu.Button>
 
       <Menu.Items
         as="nav"
-        className="absolute right-0 flex flex-col p-2 rounded border bg-white"
+        className="absolute right-0 flex flex-col p-4 text-right rounded-sm border"
       >
         {items.map((item) => (
           <Menu.Item key={item.label}>

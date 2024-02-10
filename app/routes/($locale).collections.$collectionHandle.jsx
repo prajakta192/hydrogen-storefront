@@ -43,6 +43,7 @@ export async function loader({params, request, context}) {
   const searchParams = new URL(request.url).searchParams;
 
   const {sortKey, reverse} = getSortValuesFromParam(searchParams.get('sort'));
+  
   const filters = [...searchParams.entries()].reduce(
     (filters, [key, value]) => {
       if (key.startsWith(FILTER_URL_PREFIX)) {
@@ -70,6 +71,7 @@ export async function loader({params, request, context}) {
       },
     },
   );
+
 
   if (!collection) {
     throw new Response('collection', {status: 404});
@@ -140,7 +142,7 @@ export async function loader({params, request, context}) {
 export default function Collection() {
   /** @type {LoaderReturnData} */
   const {collection, collections, appliedFilters} = useLoaderData();
-
+  
   const {ref, inView} = useInView();
 
   return (

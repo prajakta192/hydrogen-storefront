@@ -1,9 +1,9 @@
 import {json} from '@shopify/remix-oxygen';
 import {useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
-import {Pagination, getPaginationVariables,flattenConnection} from '@shopify/hydrogen';
+import {Pagination, getPaginationVariables} from '@shopify/hydrogen';
 
-import {PageHeader, Section, ProductCard, Grid, Heading, SortFilter} from '~/components';
+import {PageHeader, Section, ProductCard, Grid, Heading, SortFilter,CollectionFilter} from '~/components';
 import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import {getImageLoadingPriority} from '~/lib/const';
 import {seoPayload} from '~/lib/seo.server';
@@ -11,82 +11,45 @@ import {FILTER_URL_PREFIX} from '~/components/SortFilter';
 import {routeHeaders} from '~/data/cache';
 
 const PAGE_BY = 8;
+// let sortKey = 'TITLE';
+
+// let reverse = false;
 
 export const headers = routeHeaders;
 
 /**
  * @param {LoaderFunctionArgs}
  */
-export async function loader({ request, context}) {
+
+export async function loader({ request, context: {storefront}}) {
   const variables = getPaginationVariables(request, {pageBy: PAGE_BY});
   const searchParams = new URL(request.url).searchParams;
   const {sortKey, reverse} = getSortValuesFromParam(searchParams.get('sort'));
-  const filters = searchParams.get('filter.v.availability')
-  let filterAvailability = filters === 'true' ? true : filters === 'false' ? false : 'both';
-console.log('filter',filterAvailability)
-  const {collection, collections} = await context.storefront.query(
-    COLLECTION_QUERY,
-    {
-      variables: {
-        ...variables,
-        filters,
-        sortKey,
-        reverse,
-        country: context.storefront.i18n.country,
-        language: context.storefront.i18n.language,
-      },
-    },
-  );
+  const filters = true;
+  
+console.log('filter',filters)
 
-  const data =  filterAvailability == true ?  
-  await context.storefront.query(
-    COLLECTION_FILTER_AVAILABILITY_QUERY,{
-    variables: {
-      country: context.storefront.i18n.country,
-      language: context.storefront.i18n.language,
-      sortKey,
-      reverse,
-      filterAvailability
-    },
-    preload: true,
-  })
-  : filterAvailability == false ?  
-  await context.storefront.query(
-    COLLECTION_FILTER_AVAILABILITY_QUERY,{
-    variables: {
-      country: context.storefront.i18n.country,
-      language: context.storefront.i18n.language,
-      sortKey,
-      reverse,
-      filterAvailability
-    },
-    preload: true,
-  })
-  : filterAvailability === 'both' ?  
-   await context.storefront.query(
-   ALL_PRODUCTS_QUERY,{
+  const data = filters ? await storefront.query(ALL_PRODUCTS_AVAILABILITY_QUERY, {
     variables: {
       ...variables,
       sortKey,
       reverse,
-      country: context.storefront.i18n.country,
-      language: context.storefront.i18n.language,
+      country: storefront.i18n.country,
+      language: storefront.i18n.language,
      
     },
-    preload: true,
   })
   :
-  await context.storefront.query(ALL_PRODUCTS_QUERY, {
+  await storefront.query(ALL_PRODUCTS_QUERY, {
     variables: {
       ...variables,
       sortKey,
       reverse,
-      country: context.storefront.i18n.country,
-      language: context.storefront.i18n.language,
+      country: storefront.i18n.country,
+      language: storefront.i18n.language,
      
     },
   })
-  
   invariant(data, 'No data returned from Shopify API');
 
   const seo = seoPayload.collection({
@@ -110,18 +73,15 @@ console.log('filter',filterAvailability)
 
   return json({
     products: data.products,
-    filters,
     seo,
   });
   
 }
 
-
 export default function AllProducts() {
   /** @type {LoaderReturnData} */
   const {products} = useLoaderData();
-  // console.log('products',products)
-
+  console.log('products',products)
   return (
     <>
       
@@ -130,6 +90,7 @@ export default function AllProducts() {
         <Heading format size="copy" className="t-4">
           All Products
         </Heading>
+        <CollectionFilter/>
        <SortFilter
           products={products}
         >
@@ -205,7 +166,8 @@ const ALL_PRODUCTS_QUERY = `#graphql
     }
   ${PRODUCT_CARD_FRAGMENT}
 `;
-const COLLECTION_FILTER_AVAILABILITY_QUERY = `#graphql
+
+const ALL_PRODUCTS_AVAILABILITY_QUERY = `#graphql
   query AllProducts(
     $country: CountryCode
     $language: LanguageCode
@@ -213,86 +175,25 @@ const COLLECTION_FILTER_AVAILABILITY_QUERY = `#graphql
     $last: Int
     $startCursor: String
     $endCursor: String
-    $sortKey : ProductCollectionSortKeys
+    $sortKey : ProductSortKeys
     $reverse: Boolean
-    $filterAvailability: Boolean
   ) @inContext(country: $country, language: $language) {
-    collection(handle: "filterable-collection") {
-      id
-      title
-      description
-      seo {
-        description
-        title
+    products(first: $first,filters: { available: true}, last: $last, before: $startCursor, after: $endCursor,
+      sortKey : $sortKey, reverse : $reverse) {
+     
+      nodes {
+        ...ProductCard
       }
-      image {
-        id
-        url
-        width
-        height
-        altText
-      }
-      products(first: $first, last: $last, filters: { available: $filterAvailability}, before: $startCursor, after: $endCursor, sortKey: $sortKey, reverse: $reverse) {
-        nodes {
-          ...ProductCard
-        }
-       pageInfo {
+      pageInfo {
         hasPreviousPage
         hasNextPage
         startCursor
         endCursor
       }
-      }
     }
-  }
+    }
   ${PRODUCT_CARD_FRAGMENT}
 `;
-
-const COLLECTION_QUERY = `#graphql
-  query CollectionDetailsNew(
-    $country: CountryCode
-    $language: LanguageCode
-    $sortKey: ProductCollectionSortKeys!
-    $reverse: Boolean
-    $last: Int
-    $startCursor: String
-    $endCursor: String
-  ) @inContext(country: $country, language: $language) 
-  {
-  collections(first: 10) {
-    edges {
-      node {
-        id
-        products(first: 10,
-        last: $last,
-        before: $startCursor,
-        after: $endCursor,
-        sortKey: $sortKey,
-        reverse: $reverse) {
-          filters {
-          id
-          label
-          type
-          values {
-            id
-            label
-            count
-            input
-          }
-        }
-          edges {
-            node {
-              ...ProductCard
-            }
-          }
-        }
-      }
-    }
-  }
-}
-  ${PRODUCT_CARD_FRAGMENT}
-`;
-
 function getSortValuesFromParam(sortParam) {
   switch (sortParam) {
     case 'featured':
@@ -325,7 +226,11 @@ function getSortValuesFromParam(sortParam) {
         sortKey: 'BEST_SELLING',
         reverse: false,
       };
-    
+    case 'newest':
+      return {
+        sortKey: 'CREATED_AT',
+        reverse: false,
+      };
     default:
       return {
         sortKey: 'RELEVANCE',

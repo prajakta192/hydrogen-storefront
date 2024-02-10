@@ -36,6 +36,7 @@ export const headers = routeHeaders;
  * @param {LoaderFunctionArgs}
  */
 export async function loader({params, request, context}) {
+  // console.log('handleParam', params)
   const {productHandle} = params;
   invariant(productHandle, 'Missing productHandle param, check route filename');
 
@@ -139,17 +140,17 @@ export default function Product() {
       <Section className="px-0 md:px-8 lg:px-12">
         <div className="grid items-start md:gap-6 lg:gap-20 md:grid-cols-2 lg:grid-cols-2">
           <ProductGallery
-            media={media.nodes}
+            media={media.nodes}md:mx-auto md:max-w-sm
             className="w-full lg:col-span-1"
           />
           <div className="sticky md:-mb-nav md:top-nav md:-translate-y-nav md:h-screen md:pt-nav hiddenScroll md:overflow-y-scroll">
-            <section className="flex flex-col w-full max-w-xl gap-8 p-6 md:mx-auto md:max-w-sm md:px-0">
+            <section className="flex flex-col w-full max-w-xl gap-8 p-6 md:mx-auto md:max-w-sm md:px-0 product-details-header">
               <div className="grid gap-2">
                 <Heading as="h1" className="whitespace-normal">
                   {title}
                 </Heading>
                 {vendor && (
-                  <Text className={'opacity-50 font-medium'}>{vendor}</Text>
+                  <Text className={'opacity-50'}>{vendor}</Text>
                 )}
               </div>
               <Suspense fallback={<ProductForm variants={[]} />}>
@@ -245,12 +246,12 @@ export function ProductForm({variants}) {
             return (
               <div
                 key={option.name}
-                className="flex flex-col flex-wrap mb-4 gap-y-2 last:mb-0"
+                className="flex flex-col flex-wrap mb-4 gap-y-2 last:mb-0 product-variant"
               >
                 <Heading as="legend" size="lead" className="min-w-[4rem]">
                   {option.name}
                 </Heading>
-                <div className="flex flex-wrap items-baseline gap-4">
+                <div className="flex flex-wrap items-baseline gap-4 variant-section">
                   {option.values.length > 7 ? (
                     <div className="relative w-full">
                       <Listbox>
@@ -259,7 +260,7 @@ export function ProductForm({variants}) {
                             <Listbox.Button
                               ref={closeRef}
                               className={clsx(
-                                'flex items-center justify-between w-full py-3 px-4 border border-primary',
+                                'flex items-center justify-between w-full py-3 px-4 border-custom',
                                 open
                                   ? 'rounded-b md:rounded-t md:rounded-b-none'
                                   : 'rounded',
@@ -317,8 +318,7 @@ export function ProductForm({variants}) {
                         prefetch="intent"
                         replace
                         className={clsx(
-                          'leading-none py-1 px-2 cursor-pointer transition-all duration-200 border',
-                          isAvailable ? 'opacity-100' : 'opacity-80',
+                          'leading-none py-2 px-4 cursor-pointer transition-all duration-200 border-custom'
                         )}
                       >
                         {value}
@@ -331,9 +331,9 @@ export function ProductForm({variants}) {
           }}
         </VariantSelector>
         {selectedVariant && (
-          <div className="grid items-stretch gap-4">
+          <div className="grid items-stretch gap-4 variant-action-btn">
             {isOutOfStock ? (
-              <Button variant="secondary" disabled>
+              <Button className='py-3 border-custom' variant="" disabled>
                 <Text>Sold out</Text>
               </Button>
             ) : (
@@ -344,7 +344,7 @@ export function ProductForm({variants}) {
                     quantity: 1,
                   },
                 ]}
-                variant="primary"
+                variant=""
                 data-test="add-to-cart"
                 analytics={{
                   products: [productAnalytics],
@@ -415,7 +415,7 @@ function ProductDetail({title, content, learnMore}) {
           <Disclosure.Panel className={'pb-4 pt-2 grid gap-2'}>
             <div
               // className="prose dark:prose-invert"
-            className='text-contrast opacity-50'
+            className='text-contrast opacity-50 product-details'
               dangerouslySetInnerHTML={{__html: content}}
             />
             {learnMore && (

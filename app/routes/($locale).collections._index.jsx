@@ -2,7 +2,7 @@ import {json} from '@shopify/remix-oxygen';
 import {useLoaderData} from '@remix-run/react';
 import {Image, Pagination, getPaginationVariables} from '@shopify/hydrogen';
 
-import {Grid, Heading, PageHeader, Section, Link, Button} from '~/components';
+import {Grid, Heading, PageHeader, Section, Link, Button,CollectionFilter} from '~/components';
 import {getImageLoadingPriority} from '~/lib/const';
 import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/data/cache';
@@ -30,16 +30,21 @@ export const loader = async ({request, context: {storefront}}) => {
   });
 
   return json({collections, seo});
+  
 };
 
+
 export default function Collections() {
+  
   /** @type {LoaderReturnData} */
   const {collections} = useLoaderData();
 
   return (
     <>
       <PageHeader heading="Collections" />
+      <CollectionFilter/>
       <Section>
+      
         <Pagination connection={collections}>
           {({nodes, isLoading, PreviousLink, NextLink}) => (
             <>
@@ -107,6 +112,7 @@ const COLLECTIONS_QUERY = `#graphql
     $last: Int
     $startCursor: String
     $endCursor: String
+    
   ) @inContext(country: $country, language: $language) {
     collections(first: $first, last: $last, before: $startCursor, after: $endCursor) {
       nodes {
