@@ -15,20 +15,25 @@ export const FILTER_URL_PREFIX = 'filter.';
  * @param {Props}
  */
 export function SortFilter({
-  appliedFilters = [],
-  children,
+  appliedFilters=[],
+  filters = [],
   products = [],
+  children,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   
-  // console.log('products',products, 'filter',filters)
+  console.log('filter',appliedFilters)
   return (
     <>
       <div className="flex items-center justify-between w-full filterContainer">
         
            <div className="flex flex-col flex-wrap md:flex-row">
           <div>
-          <CollectionFilter/>
+         <div
+          className={`transition-all duration-200 `}
+        >
+          <FiltersDrawer filters={filters} appliedFilters={appliedFilters} />
+        </div>
         </div>
         <div className="flex-1">{children} </div>
       </div>
@@ -42,7 +47,76 @@ export function SortFilter({
 /**
  * @param {Omit<Props, 'children'>}
  */
+export function FiltersDrawer({filters = [], appliedFilters = []}) {
+  const [params] = useSearchParams();
+  const location = useLocation();
 
+  const filterMarkup = (filter, option) => {
+    switch (filter.type) {
+      case 'PRICE_RANGE':
+        const priceFilter = params.get(`${FILTER_URL_PREFIX}price`);
+        const price = priceFilter ? JSON.parse(priceFilter) : undefined;
+        const min = isNaN(Number(price?.min)) ? undefined : Number(price?.min);
+        const max = isNaN(Number(price?.max)) ? undefined : Number(price?.max);
+
+        return <PriceRangeFilter min={min} max={max} />;
+
+      default:
+        const to = getFilterLink(option.input, params, location);
+        return (
+          <Link
+            className="focus:underline hover:underline"
+            prefetch="intent"
+            to={to}
+          >
+            {option.label}
+          </Link>
+        );
+    }
+  };
+
+  return (
+    <>
+      <nav className="flex customFilters">
+        
+
+        <Heading as="h4" size="lead">
+          Filter By :
+        </Heading>
+        <div className="divide-y relative z-40">
+          {filters.map((filter) => (
+            <Disclosure as="div" key={filter.id} className="w-full">
+              {({open}) => (
+                <>
+                  <Disclosure.Button className="flex justify-between w-full px-4">
+                    <span className="customFilters">{filter.label}</span>
+                    <IconCaret direction={open ? 'up' : 'down'} />
+                  </Disclosure.Button>
+                  <Disclosure.Panel key={filter.id}>
+                    <ul key={filter.id} className="py-2 absolute bg-white left-2 border rounded">
+                      {filter.values?.map((option) => {
+                        return (
+                          <li key={option.id} className="px-2 py-1">
+                            {filterMarkup(filter, option)}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </Disclosure.Panel>
+                </>
+              )}
+            </Disclosure>
+          ))}
+        </div>
+      </nav>
+      {appliedFilters.length > 0 ? (
+          <div>
+            <AppliedFilters filters={appliedFilters} />
+          </div>
+        ) : null}
+    </>
+  );
+}
 
 /**
  * @param {{filters: AppliedFilter[]}}
@@ -52,9 +126,7 @@ function AppliedFilters({filters = []}) {
   const location = useLocation();
   return (
     <>
-      <Heading as="h4" size="lead" className="pb-4">
-        Applied filters
-      </Heading>
+      
       <div className="flex flex-wrap gap-2">
         {filters.map((filter) => {
           return (

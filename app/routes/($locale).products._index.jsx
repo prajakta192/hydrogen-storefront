@@ -21,9 +21,23 @@ export async function loader({ request, context}) {
   const variables = getPaginationVariables(request, {pageBy: PAGE_BY});
   const searchParams = new URL(request.url).searchParams;
   const {sortKey, reverse} = getSortValuesFromParam(searchParams.get('sort'));
-  const filters = searchParams.get('filter.v.availability')
-  let filterAvailability = filters === 'true' ? true : filters === 'false' ? false : 'both';
-console.log('filter',filterAvailability)
+  // const filter = searchParams.get('filter.v.availability')
+  let filterAvailability =  searchParams.get('filter.v.availability') === 'true' ? true :  searchParams.get('filter.v.availability') === 'false' ? false : 'both';
+
+const filters = [...searchParams.entries()].reduce(
+    (filters, [key, value]) => {
+      if (key.startsWith(FILTER_URL_PREFIX)) {
+        const filterKey = key.substring(FILTER_URL_PREFIX.length);
+        filters.push({
+          [filterKey]: JSON.parse(value),
+        });
+      }
+      return filters;
+    },
+    [],
+  );
+console.log('filter',filters)
+
   const {collection, collections} = await context.storefront.query(
     COLLECTION_QUERY,
     {
@@ -38,47 +52,10 @@ console.log('filter',filterAvailability)
     },
   );
 
-  const data =  filterAvailability == true ?  
-  await context.storefront.query(
-    COLLECTION_FILTER_AVAILABILITY_QUERY,{
-    variables: {
-      country: context.storefront.i18n.country,
-      language: context.storefront.i18n.language,
-      sortKey,
-      reverse,
-      filterAvailability
-    },
-    preload: true,
-  })
-  : filterAvailability == false ?  
-  await context.storefront.query(
-    COLLECTION_FILTER_AVAILABILITY_QUERY,{
-    variables: {
-      country: context.storefront.i18n.country,
-      language: context.storefront.i18n.language,
-      sortKey,
-      reverse,
-      filterAvailability
-    },
-    preload: true,
-  })
-  : filterAvailability === 'both' ?  
-   await context.storefront.query(
-   ALL_PRODUCTS_QUERY,{
+  const data = await context.storefront.query(ALL_PRODUCTS_QUERY, {
     variables: {
       ...variables,
-      sortKey,
-      reverse,
-      country: context.storefront.i18n.country,
-      language: context.storefront.i18n.language,
-     
-    },
-    preload: true,
-  })
-  :
-  await context.storefront.query(ALL_PRODUCTS_QUERY, {
-    variables: {
-      ...variables,
+      filters,
       sortKey,
       reverse,
       country: context.storefront.i18n.country,
@@ -107,20 +84,70 @@ console.log('filter',filterAvailability)
     },
   });
 
+const allFilterValues = collection.products.filters.flatMap(
+    (filter) => filter.values,
+  );
+console.log('apl',allFilterValues)
 
+const appliedFilters = filters
+    .map((filter) => {
+      const foundValue = allFilterValues.find((value) => {
+        const valueInput = JSON.parse(value.input);
+        // special case for price, the user can enter something freeform (still a number, though)
+        // that may not make sense for the locale/currency.
+        // Basically just check if the price filter is applied at all.
+        if (valueInput.price && filter.price) {
+          return true;
+        }
+        return (
+          // This comparison should be okay as long as we're not manipulating the input we
+          // get from the API before using it as a URL param.
+          JSON.stringify(valueInput) === JSON.stringify(filter)
+        );
+      });
+      if (!foundValue) {
+        // eslint-disable-next-line no-console
+        console.error('Could not find filter value for filter', filter);
+        return null;
+      }
+
+      if (foundValue.id === 'filter.v.price') {
+        // Special case for price, we want to show the min and max values as the label.
+        const input = JSON.parse(foundValue.input);
+        const min = parseAsCurrency(input.price?.min ?? 0, locale);
+        const max = input.price?.max
+          ? parseAsCurrency(input.price.max, locale)
+          : '';
+        const label = min && max ? `${min} - ${max}` : 'Price';
+
+        return {
+          filter,
+          label,
+        };
+      }
+      return {
+        filter,
+        label: foundValue.label,
+      };
+    })
+    .filter((filter) => filter !== null);
+
+    console.log('allVal', allFilterValues)
   return json({
+    collection,
+    appliedFilters,
+    collections: flattenConnection(collections),
     products: data.products,
     filters,
     seo,
   });
-  
 }
 
 
 export default function AllProducts() {
   /** @type {LoaderReturnData} */
-  const {products} = useLoaderData();
-  // console.log('products',products)
+  const {products,collection,collections, appliedFilters} = useLoaderData();
+  console.log('products',products)
 
   return (
     <>
@@ -131,10 +158,12 @@ export default function AllProducts() {
           All Products
         </Heading>
        <SortFilter
+          filters={collection.products.filters}
+          appliedFilters={appliedFilters}
           products={products}
         >
         </SortFilter>
-        <Pagination connection={products}>
+        <Pagination connection={collection.products}>
           {({nodes, isLoading, NextLink, PreviousLink}) => {
             const itemsMarkup = nodes.map((product, i) => (
               <ProductCard
@@ -154,7 +183,7 @@ export default function AllProducts() {
                 <Grid data-test="product-grid">{itemsMarkup}</Grid>
                 
                 <div className="flex items-center justify-center mt-6">
-                  <NextLink className="inline-block rounded font-medium text-center py-3 px-6 border-custom  bg-light text-contrast w-full">
+                  <NextLink className="inline-block rounded font-medium text-center py-3 px-6 border-custom  bg-light w-full">
                     {isLoading ? 'Loading...' : 'Next'}
                   </NextLink>
                 </div>
@@ -205,20 +234,22 @@ const ALL_PRODUCTS_QUERY = `#graphql
     }
   ${PRODUCT_CARD_FRAGMENT}
 `;
-const COLLECTION_FILTER_AVAILABILITY_QUERY = `#graphql
-  query AllProducts(
+
+const COLLECTION_QUERY = `#graphql
+  query AllProductFilter(
     $country: CountryCode
     $language: LanguageCode
+    $filters: [ProductFilter!]
+    $sortKey: ProductCollectionSortKeys!
+    $reverse: Boolean
     $first: Int
     $last: Int
     $startCursor: String
     $endCursor: String
-    $sortKey : ProductCollectionSortKeys
-    $reverse: Boolean
-    $filterAvailability: Boolean
   ) @inContext(country: $country, language: $language) {
-    collection(handle: "filterable-collection") {
+    collection(handle: "Shoes") {
       id
+      handle
       title
       description
       seo {
@@ -232,44 +263,16 @@ const COLLECTION_FILTER_AVAILABILITY_QUERY = `#graphql
         height
         altText
       }
-      products(first: $first, last: $last, filters: { available: $filterAvailability}, before: $startCursor, after: $endCursor, sortKey: $sortKey, reverse: $reverse) {
-        nodes {
-          ...ProductCard
-        }
-       pageInfo {
-        hasPreviousPage
-        hasNextPage
-        startCursor
-        endCursor
-      }
-      }
-    }
-  }
-  ${PRODUCT_CARD_FRAGMENT}
-`;
-
-const COLLECTION_QUERY = `#graphql
-  query CollectionDetailsNew(
-    $country: CountryCode
-    $language: LanguageCode
-    $sortKey: ProductCollectionSortKeys!
-    $reverse: Boolean
-    $last: Int
-    $startCursor: String
-    $endCursor: String
-  ) @inContext(country: $country, language: $language) 
-  {
-  collections(first: 10) {
-    edges {
-      node {
-        id
-        products(first: 10,
+      products(
+        first: $first,
         last: $last,
         before: $startCursor,
         after: $endCursor,
+        filters: $filters,
         sortKey: $sortKey,
-        reverse: $reverse) {
-          filters {
+        reverse: $reverse
+      ) {
+        filters {
           id
           label
           type
@@ -280,16 +283,26 @@ const COLLECTION_QUERY = `#graphql
             input
           }
         }
-          edges {
-            node {
-              ...ProductCard
-            }
-          }
+        nodes {
+          ...ProductCard
+        }
+        pageInfo {
+          hasPreviousPage
+          hasNextPage
+          endCursor
+          startCursor
+        }
+      }
+    }
+    collections(first: 100) {
+      edges {
+        node {
+          title
+          handle
         }
       }
     }
   }
-}
   ${PRODUCT_CARD_FRAGMENT}
 `;
 

@@ -146,8 +146,9 @@ function product({product, url, selectedVariant}) {
  * }}
  */
 function collectionJsonLd({url, collection}) {
+  
   const siteUrl = new URL(url);
-  const itemListElement = collection.products.nodes.map((product, index) => {
+  const itemListElement = collection.products?.nodes.map((product, index) => {
     return {
       '@type': 'ListItem',
       position: index + 1,
