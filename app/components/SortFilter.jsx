@@ -22,7 +22,7 @@ export function SortFilter({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   
-  console.log('filter',appliedFilters)
+  // console.log('filter',appliedFilters)
   return (
     <>
       <div className="flex items-center justify-between w-full filterContainer">
@@ -77,9 +77,13 @@ export function FiltersDrawer({filters = [], appliedFilters = []}) {
 
   return (
     <>
-      <nav className="flex customFilters">
-        
+         {appliedFilters.length > 0 ? (
+          <div>
+            <AppliedFilters filters={appliedFilters} />
+          </div>
+        ) : null}
 
+      <nav className="flex customFilters">
         <Heading as="h4" size="lead">
           Filter By :
         </Heading>
@@ -109,11 +113,7 @@ export function FiltersDrawer({filters = [], appliedFilters = []}) {
           ))}
         </div>
       </nav>
-      {appliedFilters.length > 0 ? (
-          <div>
-            <AppliedFilters filters={appliedFilters} />
-          </div>
-        ) : null}
+      
     </>
   );
 }
@@ -127,15 +127,15 @@ function AppliedFilters({filters = []}) {
   return (
     <>
       
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 customFilters pb-4">
         {filters.map((filter) => {
           return (
             <Link
               to={getAppliedFilterLink(filter, params, location)}
-              className="flex px-2 border rounded-full gap"
+              className="flex px-2 border rounded-full gap-2"
               key={`${filter.label}-${JSON.stringify(filter.filter)}`}
             >
-              <span className="flex-grow">{filter.label}</span>
+              <span className="flex-grow mt-1">{filter.label}</span>
               <span>
                 <IconXMark />
               </span>

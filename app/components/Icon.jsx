@@ -243,7 +243,7 @@ export function IconCheck({stroke = 'currentColor', ...props}) {
  */
 export function IconXMark({stroke = 'currentColor', ...props}) {
   return (
-    <Icon {...props} fill="transparent" stroke={stroke}>
+    <Icon {...props} fill="transparent" stroke={stroke} className='w-4 h-4'>
       <title>Delete</title>
       <path
         strokeLinecap="round"

@@ -132,10 +132,11 @@ const appliedFilters = filters
     })
     .filter((filter) => filter !== null);
 
-    console.log('allVal', allFilterValues)
+    
   return json({
     collection,
     appliedFilters,
+    allFilterValues,
     collections: flattenConnection(collections),
     products: data.products,
     filters,
@@ -146,8 +147,9 @@ const appliedFilters = filters
 
 export default function AllProducts() {
   /** @type {LoaderReturnData} */
-  const {products,collection,collections, appliedFilters} = useLoaderData();
-  console.log('products',products)
+  const {products,collection,collections, appliedFilters,allFilterValues} = useLoaderData();
+  // console.log('price',allFilterValues);
+  // console.log('coll', collection.products.edges)
 
   return (
     <>
@@ -247,7 +249,7 @@ const COLLECTION_QUERY = `#graphql
     $startCursor: String
     $endCursor: String
   ) @inContext(country: $country, language: $language) {
-    collection(handle: "Shoes") {
+    collection(handle: "womens-dresses") {
       id
       handle
       title
@@ -283,6 +285,21 @@ const COLLECTION_QUERY = `#graphql
             input
           }
         }
+         edges {
+        node {
+          handle
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+            maxVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+        }
+      }
         nodes {
           ...ProductCard
         }
