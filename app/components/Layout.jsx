@@ -33,6 +33,8 @@ import {useRootLoaderData} from '~/root';
 export function Layout({children, layout}) {
 //console.log('children', children)
   const {headerMenu, footerMenu} = layout || {};
+  console.log('menu', headerMenu)
+  
   return (
     <>
       <div className="flex flex-col min-h-screen border-b mainNav">
@@ -310,7 +312,7 @@ function DesktopHeader({isHome, menu, openCart, title,openSearch,closeSearch,hid
       role="banner"
       className={`${
         isHome
-          ? 'bg-primary/80 light:bg-contrast/60 text-contrast light:text-primary'
+          ? 'light:bg-contrast/60 text-primary light:text-primary'
           : 'light:bg-contrast/60 light:text-primary'
       } ${
         !isHome && y > 50 && 'shadow-lightHeader'

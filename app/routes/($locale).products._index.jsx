@@ -17,7 +17,7 @@ export const headers = routeHeaders;
 /**
  * @param {LoaderFunctionArgs}
  */
-export async function loader({ request, context}) {
+export async function loader({request, context}) {
   const variables = getPaginationVariables(request, {pageBy: PAGE_BY});
   const searchParams = new URL(request.url).searchParams;
   const {sortKey, reverse} = getSortValuesFromParam(searchParams.get('sort'));
