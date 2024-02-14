@@ -61,9 +61,9 @@ export function CountrySelector() {
       <Heading size="lead" className="cursor-default font-bold" as="h2">
         Country/region
       </Heading>
-      <div className="relative">
+      <div>
         <details
-          className="absolute w-full border rounded border-contrast/30 dark:border-white open:round-b-none overflow-clip"
+          className="w-full border rounded border-contrast/30 dark:border-white open:round-b-none overflow-clip"
           ref={closeRef}
         >
           <summary className="flex items-center justify-between w-full py-3 cursor-pointer">

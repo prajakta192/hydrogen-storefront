@@ -483,13 +483,7 @@ function Badge({openCart, dark, count}) {
 function Footer({menu}) {
   // console.log(menu)
   const isHome = useIsHomePath();
-  /*
-    const itemsCount = menu
-    ? menu?.items?.length + 1 > 4
-      ? 4
-      : menu?.items?.length + 1
-    : [];
-  */
+  
   const itemsCount = menu
     ? menu?.items?.length + 1 > 4
       ? 4
@@ -506,35 +500,35 @@ function Footer({menu}) {
       style={{border:'1px solid #ececec'}}
       className={`py-8 px-6 md:px-8 lg:px-12 min-h-[20rem] bg-primary light:bg-contrast light:text-primary text-contrast overflow-hidden`}
     >
-    <div className={`grid border-b pb-8 items-start grid-flow-row w-full gap-6 md:gap-8 lg:gap-12 grid-cols-1 md:grid-cols-3 lg:grid-cols-${itemsCount}`}>
+    <div className={`grid border-b pb-6 items-start grid-flow-row w-full gap-6 md:gap-8 lg:gap-12 grid-cols-1 md:grid-cols-3 lg:grid-cols-${itemsCount}`}>
       <FooterMenu menu={menu} />
-       <section>
-    <div className="footer-block--newsletter">
-      <div className="footer-block__newsletter">
-          <h2 className="footer-block__heading font-bold">Subscribe to our emails</h2>
-          <form method="post" action="/contact#ContactFooter" id="ContactFooter" acceptCharset="UTF-8" className="footer__newsletter newsletter-form">
-              <div className="newsletter-form__field-wrapper">
-                  <div className="field">
-                  <input id="NewsletterForm--footer" type="email" name="contact[email]" className="field__input"  aria-required="true" autoCorrect="off" autoCapitalize="none" autoComplete="email" placeholder="Email" required=""/>
-                  <label className="field__label" htmlFor="NewsletterForm--footer">
-                      
-                  </label>
-                  <button type="submit" className="newsletter-form__button field__button lg-field__button" name="commit" id="Subscribe" aria-label="Subscribe">
-                  <svg viewBox="0 0 14 10" fill="none" aria-hidden="true" focusable="false" role="presentation" className="icon icon-arrow" xmlns="http://www.w3.org/2000/svg">
-                     <path fillRule="evenodd" clipRule="evenodd" d="M8.537.808a.5.5 0 01.817-.162l4 4a.5.5 0 010 .708l-4 4a.5.5 0 11-.708-.708L11.793 5.5H1a.5.5 0 010-1h10.793L8.646 1.354a.5.5 0 01-.109-.546z" fill="currentColor"></path>
-                  </svg>
-               </button>
+    <section>
+        <div className="footer-block--newsletter">
+          <div className="footer-block__newsletter">
+              <h2 className="footer-block__heading font-bold">Subscribe to our emails</h2>
+              <form method="post" action="/contact#ContactFooter" id="ContactFooter" acceptCharset="UTF-8" className="footer__newsletter newsletter-form">
+                  <div className="newsletter-form__field-wrapper">
+                      <div className="field">
+                      <input id="NewsletterForm--footer" type="email" name="contact[email]" className="field__input"  aria-required="true" autoCorrect="off" autoCapitalize="none" autoComplete="email" placeholder="Email" required=""/>
+                      <label className="field__label" htmlFor="NewsletterForm--footer">
+                          
+                      </label>
+                      <button type="submit" className="newsletter-form__button field__button lg-field__button" name="commit" id="Subscribe" aria-label="Subscribe">
+                      <svg viewBox="0 0 14 10" fill="none" aria-hidden="true" focusable="false" role="presentation" className="icon icon-arrow" xmlns="http://www.w3.org/2000/svg">
+                         <path fillRule="evenodd" clipRule="evenodd" d="M8.537.808a.5.5 0 01.817-.162l4 4a.5.5 0 010 .708l-4 4a.5.5 0 11-.708-.708L11.793 5.5H1a.5.5 0 010-1h10.793L8.646 1.354a.5.5 0 01-.109-.546z" fill="currentColor"></path>
+                      </svg>
+                   </button>
+                      </div>
                   </div>
-              </div>
-          </form>
-      </div>
-  </div>
+              </form>
+          </div>
+        </div>
     </section>
       <CountrySelector />
     </div>
     
       <div
-        className={`self-start opacity-50 text-center`}
+        className={`self-end opacity-50 text-center`}
       >
       <p>
         &copy; {new Date().getFullYear()} / Shopify, Inc. Hydrogen is an MIT
