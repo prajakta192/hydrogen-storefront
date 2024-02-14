@@ -11,7 +11,7 @@ function Icon({children, className, fill = 'currentColor', stroke, ...props}) {
       {...props}
       fill={fill}
       stroke={stroke}
-      className={clsx('w-7 h-7', className)}
+      className={clsx('', className)}
     >
       {children}
     </svg>
@@ -37,7 +37,7 @@ export function IconMenu(props) {
  */
 export function IconClose(props) {
   return (
-    <Icon {...props} stroke={props.stroke || 'currentColor'}>
+    <Icon className='w-7 h-7' {...props} stroke={props.stroke || 'currentColor'}>
       <title>Close</title>
       <line
         x1="4.44194"
@@ -133,7 +133,7 @@ export function IconCaret({
  */
 export function IconSelect(props) {
   return (
-    <Icon {...props}>
+    <Icon className='w-7 h-7' {...props}>
       <title>Select</title>
       <path d="M7 8.5L10 6.5L13 8.5" strokeWidth="1.25" />
       <path d="M13 11.5L10 13.5L7 11.5" strokeWidth="1.25" />
