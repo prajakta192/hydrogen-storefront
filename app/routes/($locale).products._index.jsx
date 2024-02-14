@@ -156,9 +156,17 @@ export default function AllProducts() {
       
       <Section>
       
-        <Heading format size="copy" className="t-4">
-          All Products
-        </Heading>
+        <PageHeader heading={collection.title}>
+        {collection?.description && (
+          <div className="flex items-baseline justify-between w-full">
+            <div>
+              <Text format width="narrow" as="p" className="inline-block">
+                {collection.description}
+              </Text>
+            </div>
+          </div>
+        )}
+      </PageHeader>
        <SortFilter
           filters={collection.products.filters}
           appliedFilters={appliedFilters}

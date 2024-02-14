@@ -98,7 +98,7 @@ function CollectionCard({collection, loading}) {
         )}
       </div>
       <Heading as="h3" size="copy">
-        {collection.title} who
+        {collection.title} 
       </Heading>
     </Link>
   );

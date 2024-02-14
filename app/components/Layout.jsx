@@ -304,7 +304,7 @@ function MobileHeader({title, isHome, openCart, openMenu,openSearch,closeSearch,
 function DesktopHeader({isHome, menu, openCart, title,openSearch,closeSearch,hidden}) {
   const params = useParams();
   const {y} = useWindowScroll();
-  
+  console.log('params',params)
   return (
    <>
    {!hidden &&

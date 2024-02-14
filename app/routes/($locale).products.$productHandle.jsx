@@ -405,7 +405,7 @@ function ProductDetail({title, content, learnMore}) {
               </Text>
               <IconClose
                 className={clsx(
-                  'transition-transform transform-gpu duration-200',
+                  'transition-transform transform-gpu duration-200 w-7 h-7',
                   !open && 'rotate-[45deg]',
                 )}
               />
