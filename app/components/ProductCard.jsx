@@ -32,6 +32,7 @@ export function ProductCard({
   if (!firstVariant) return null;
   const {image, price, compareAtPrice} = firstVariant;
 
+
   if (label) {
     cardLabel = label;
   } else if (isDiscounted(price, compareAtPrice)) {

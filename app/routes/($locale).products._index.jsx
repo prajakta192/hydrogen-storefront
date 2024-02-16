@@ -36,7 +36,7 @@ const filters = [...searchParams.entries()].reduce(
     },
     [],
   );
-console.log('filter',filters)
+
 
   const {collection, collections} = await context.storefront.query(
     COLLECTION_QUERY,
@@ -87,7 +87,7 @@ console.log('filter',filters)
 const allFilterValues = collection.products.filters.flatMap(
     (filter) => filter.values,
   );
-console.log('apl',allFilterValues)
+
 
 const appliedFilters = filters
     .map((filter) => {
@@ -156,17 +156,9 @@ export default function AllProducts() {
       
       <Section>
       
-        <PageHeader heading={collection.title}>
-        {collection?.description && (
-          <div className="flex items-baseline justify-between w-full">
-            <div>
-              <Text format width="narrow" as="p" className="inline-block">
-                {collection.description}
-              </Text>
-            </div>
-          </div>
-        )}
-      </PageHeader>
+        <Heading format size="copy" className="t-4">
+          All Products
+        </Heading>
        <SortFilter
           filters={collection.products.filters}
           appliedFilters={appliedFilters}

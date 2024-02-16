@@ -24,6 +24,7 @@ import {
   Link,
   AddToCartButton,
   Button,
+  ProductSlider
 } from '~/components';
 import {getExcerpt} from '~/lib/utils';
 import {seoPayload} from '~/lib/seo.server';
@@ -138,8 +139,8 @@ export default function Product() {
   return (
     <>
       <Section className="px-0 md:px-8 lg:px-12">
-        <div className="grid items-start md:gap-6 lg:gap-20 md:grid-cols-2 lg:grid-cols-2">
-          <ProductGallery
+        <div className="grid items-start md:gap-6 lg:gap-20  grid-different-size">
+          <ProductSlider 
             media={media.nodes}md:mx-auto md:max-w-sm
             className="w-full lg:col-span-1"
           />
@@ -355,7 +356,7 @@ export function ProductForm({variants}) {
                   as="span"
                   className="flex items-center justify-center gap-2"
                 >
-                  <span>Add to Cart</span> <span>·</span>{' '}
+                  <Text className='py-2' size='copy'>Add to Cart</Text> <span>·</span>{' '}
                   <Money
                     withoutTrailingZeros
                     data={selectedVariant?.price}
@@ -394,7 +395,10 @@ export function ProductForm({variants}) {
  * }}
  */
 function ProductDetail({title, content, learnMore}) {
+
   return (
+  <>
+   
     <Disclosure key={title} as="div" className="grid w-full gap-2" defaultOpen='true'>
       {({open}) => (
         <>
@@ -415,7 +419,7 @@ function ProductDetail({title, content, learnMore}) {
           <Disclosure.Panel className={'pb-4 pt-2 grid gap-2'}>
             <div
               // className="prose dark:prose-invert"
-            className='text-contrast opacity-50 product-details'
+            className='text-primary opacity-50 product-details'
               dangerouslySetInnerHTML={{__html: content}}
             />
             {learnMore && (
@@ -429,9 +433,12 @@ function ProductDetail({title, content, learnMore}) {
               </div>
             )}
           </Disclosure.Panel>
+         
         </>
       )}
     </Disclosure>
+    
+  </>
   );
 }
 

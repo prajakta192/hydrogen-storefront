@@ -47,7 +47,7 @@ export function getExcerpt(text) {
 /**
  * @param {string} date
  */
-export function isNewArrival(date, daysOld = 30) {
+export function isNewArrival(date, daysOld = 4) {
   return (
     new Date(date).valueOf() >
     new Date().setDate(new Date().getDate() - daysOld).valueOf()

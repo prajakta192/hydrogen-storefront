@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react';
+import {useMemo, useState, useRef} from 'react';
 import {Menu, Disclosure} from '@headlessui/react';
 import {
   Link,
@@ -8,7 +8,7 @@ import {
 } from '@remix-run/react';
 import {useDebounce} from 'react-use';
 
-import {Heading, IconFilters, IconCaret, IconXMark, Text,CollectionFilter} from '~/components';
+import {Heading, IconFilters, IconCaret, IconXMark, Text} from '~/components';
 export const FILTER_URL_PREFIX = 'filter.';
 
 /**
@@ -75,6 +75,19 @@ export function FiltersDrawer({filters = [], appliedFilters = []}) {
     }
   };
 
+ const [isClosed, setIsClosed] = useState(false);
+
+  const disclosureRef = useRef(null);
+  const hideModalHandler = (e) => {
+    e.preventDefault();
+    console.log(disclosureRef.current)
+    disclosureRef.current?.click();
+    setIsClosed(!isClosed);
+  };
+
+
+
+
   return (
     <>
          {appliedFilters.length > 0 ? (
@@ -87,22 +100,26 @@ export function FiltersDrawer({filters = [], appliedFilters = []}) {
         <Heading as="h4" size="lead">
           Filter By :
         </Heading>
-        <div className="divide-y relative z-40">
+        <div className="divide-y relative z-40 disclosuer-sec">
           {filters.map((filter) => (
             <Disclosure as="div" key={filter.id} className="w-full">
               {({open}) => (
                 <>
-                  <Disclosure.Button className="flex justify-between w-full px-4">
+                  <Disclosure.Button className="flex justify-between w-full px-4"  ref={disclosureRef}>
+                    
                     <span className="customFilters">{filter.label}</span>
                     <IconCaret direction={open ? 'up' : 'down'} />
                   </Disclosure.Button>
-                  <Disclosure.Panel key={filter.id}>
-                    <ul key={filter.id} className="py-2 absolute bg-white left-2 border rounded">
+                  
+                  <Disclosure.Panel key={filter.id} className='headlessui-disclosure-panel'>
+                    <ul key={filter.id} className="py-2 absolute bg-white left-2 border rounded ">
                       {filter.values?.map((option) => {
                         return (
-                          <li key={option.id} className="px-2 py-1">
+                          
+                          <li key={option.id} className="px-2 py-1" onClick={hideModalHandler} >
                             {filterMarkup(filter, option)}
                           </li>
+                          
                         );
                       })}
                     </ul>

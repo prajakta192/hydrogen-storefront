@@ -33,7 +33,7 @@ import {useRootLoaderData} from '~/root';
 export function Layout({children, layout}) {
 //console.log('children', children)
   const {headerMenu, footerMenu} = layout || {};
-  console.log('menu', headerMenu)
+  // console.log('menu', headerMenu)
   
   return (
     <>
@@ -304,7 +304,7 @@ function MobileHeader({title, isHome, openCart, openMenu,openSearch,closeSearch,
 function DesktopHeader({isHome, menu, openCart, title,openSearch,closeSearch,hidden}) {
   const params = useParams();
   const {y} = useWindowScroll();
-  console.log('params',params)
+  
   return (
    <>
    {!hidden &&

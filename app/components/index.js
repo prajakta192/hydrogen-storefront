@@ -21,6 +21,6 @@ export {SortFilter} from './SortFilter';
 export {Grid} from './Grid';
 export {FeaturedProducts} from './FeaturedProducts';
 export {AddToCartButton} from './AddToCartButton';
-export {CollectionFilter} from './CollectionFilter'
+export {ProductSlider} from './ProductSlider'
 export * from './Icon';
 
