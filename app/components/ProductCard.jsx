@@ -22,6 +22,7 @@ export function ProductCard({
   onClick,
   quickAdd,
 }) {
+  console.log('loading', loading)
   let cardLabel;
   // console.log(product)
   const cardProduct = product?.variants ? product : getProductPlaceholder();
@@ -50,6 +51,7 @@ export function ProductCard({
     price: firstVariant.price.amount,
     quantity: 1,
   };
+
 
   return (
     <div className="flex flex-col gap-2">
@@ -99,7 +101,7 @@ export function ProductCard({
           </div>
         </div>
       </Link>
-      {quickAdd && firstVariant.availableForSale && (
+      {firstVariant.availableForSale && (
         <AddToCartButton
           lines={[
             {
@@ -119,7 +121,7 @@ export function ProductCard({
           </Text>
         </AddToCartButton>
       )}
-      {quickAdd && !firstVariant.availableForSale && (
+      {!firstVariant.availableForSale && (
         <Button variant="secondary" className="mt-2" disabled>
           <Text as="span" className="flex items-center justify-center gap-2">
             Sold out

@@ -313,7 +313,7 @@ function DesktopHeader({isHome, menu, openCart, title,openSearch,closeSearch,hid
       className={`${
         isHome
           ? 'light:bg-contrast/60 text-primary light:text-primary'
-          : 'light:bg-contrast/60 light:text-primary'
+          : 'light:bg-contrast/60 text-primary'
       } ${
         !isHome && y > 50 && 'shadow-lightHeader'
       } hidden h-nav lg:flex border-b items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 w-full leading-none px-4 py-8 lg:px-14`}
@@ -359,31 +359,32 @@ function DesktopHeader({isHome, menu, openCart, title,openSearch,closeSearch,hid
         <Form
           method="get"
           action={params.locale ? `/${params.locale}/search` : '/search'}
-          className="flex items-center"
+         className='search-form'
         >
-        
+        <div className='relative search-field flex items-center w-full'>
           <Input
             className={
               isHome 
-                ? 'focus:border-contrast/20 dark:focus:border-primary/20'
-                : 'focus:border-primary/20 '
+                ? 'focus:border-primary/20 dark:focus:border-primary/20 flex-grow'
+                : 'focus:border-primary/20 flex-grow'
             }
             type="search"
             variant="minisearch"
             placeholder="Search"
             name="q"
           />
-
+        <button className="absolute flex items-center justify-center w-5 h-5 focus:ring-primary/5">
+        <IconClose onClick={closeSearch}/>
+        </button>
           <button
-            className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5"
+            className="absolute right-2 flex items-center justify-center w-5 h-5 focus:ring-primary/5"
             
           >
             <IconSearch/>
           </button>
+        </div>  
         </Form>
-        <button className="relative flex items-center justify-center w-8 h-8 focus:ring-primary/5">
-        <IconClose onClick={closeSearch}/>
-        </button>
+        
     </div>
 }
     </>

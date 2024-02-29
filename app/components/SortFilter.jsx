@@ -319,6 +319,10 @@ export default function SortMenu() {
       label: 'Price, High - Low',
       key: 'price-high-low',
     },
+    {
+      label:'',
+      key:'',
+    }
   ];
   const [params] = useSearchParams();
   const location = useLocation();

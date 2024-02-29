@@ -78,9 +78,14 @@ p.announcement-bar__message{
 .product-variant legend, .mainNav header nav a, .filterContainer .customFilters{
   color: rgba(18,18,18,.75);
 }
-.mainNav header nav a{
-
+.mainNav .search-modal form.search-form, #mainContent form.search-form{
+  max-width: 35rem;
+  width: 100%;
 }
+.mainNav .search-modal .search-form .search-field button:nth-child(2){
+  right: 40px;
+}
+
 .mainNav header nav a,.product-variant .variant-section a, .product-variant legend, 
 .product-details-header span, .filterContainer .customFilters{
   font-size: .84rem;

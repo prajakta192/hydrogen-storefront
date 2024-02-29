@@ -37,7 +37,7 @@ export function IconMenu(props) {
  */
 export function IconClose(props) {
   return (
-    <Icon className='w-7 h-7'  {...props} stroke={props.stroke || 'currentColor'}>
+    <Icon className='w-5 h-5'  {...props} stroke={props.stroke || 'currentColor'}>
       <title>Close</title>
       <line
         x1="4.44194"

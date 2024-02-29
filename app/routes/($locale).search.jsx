@@ -13,6 +13,7 @@ import {
   ProductSwimlane,
   Section,
   Text,
+  IconSearch
 } from '~/components';
 import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import {getImageLoadingPriority, PAGINATION_SIZE} from '~/lib/const';
@@ -74,21 +75,27 @@ export default function Search() {
 
   return (
     <>
-      <PageHeader>
+      <PageHeader className='justify-center'>
         <Heading as="h1" size="copy">
-          Search
+          Search results
         </Heading>
-        <Form method="get" className="relative flex w-full text-heading">
+        <Form method="get" className="search-form">
+        <div className='relative search-field flex items-center w-full'>
           <Input
             defaultValue={searchTerm}
             name="q"
             placeholder="Search…"
             type="search"
             variant="search"
+            className='focus:border-primary/20 dark:focus:border-primary/20 flex-grow'
           />
-          <button className="absolute right-0 py-2" type="submit">
-            Go
+          <button
+            className="absolute right-2 flex items-center justify-center w-5 h-5 focus:ring-primary/5"
+            
+          >
+            <IconSearch/>
           </button>
+        </div>  
         </Form>
       </PageHeader>
       {!searchTerm || noResults ? (
@@ -142,9 +149,9 @@ function NoResults({noResults, recommendations}) {
     <>
       {noResults && (
         <Section padding="x">
-          <Text className="opacity-50">
+          <span className="opacity-50 text-center">
             No results, try a different search.
-          </Text>
+          </span>
         </Section>
       )}
       <Suspense>

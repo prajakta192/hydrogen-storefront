@@ -43,7 +43,8 @@ export async function loader({params, request, context}) {
   const searchParams = new URL(request.url).searchParams;
 
   const {sortKey, reverse} = getSortValuesFromParam(searchParams.get('sort'));
-  
+    console.log('sort', sortKey)
+    
   const filters = [...searchParams.entries()].reduce(
     (filters, [key, value]) => {
       if (key.startsWith(FILTER_URL_PREFIX)) {

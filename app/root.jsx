@@ -57,9 +57,19 @@ export const links = () => {
       rel: 'preconnect',
       href: 'https://shop.app',
     },
+    {
+      rel:'stylesheet', 
+      href:'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css',
+    },
+    {
+      rel:'stylesheet', 
+      href:'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css',
+    },
     {rel: 'icon', type: 'image/svg+xml', href: favicon},
+
   ];
 };
+
 
 /**
  * @return {LoaderReturnData}
@@ -109,9 +119,11 @@ export default function App() {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta name="msvalidate.01" content="A352E6A0AF9A652267361BBB572B8468" />
+       
         <Seo />
         <Meta />
         <Links />
+        
       </head>
       <body>
         <Layout
