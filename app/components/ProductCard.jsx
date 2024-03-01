@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import {flattenConnection, Image, Money, useMoney} from '@shopify/hydrogen';
-import {Text, Link, AddToCartButton, Button} from '~/components';
+import {Text, Link, AddToCartButton, Button,AddToWishlist} from '~/components';
 import {isDiscounted, isNewArrival} from '~/lib/utils';
 import {getProductPlaceholder} from '~/lib/placeholders';
 
@@ -22,7 +22,7 @@ export function ProductCard({
   onClick,
   quickAdd,
 }) {
-  console.log('loading', loading)
+  
   let cardLabel;
   // console.log(product)
   const cardProduct = product?.variants ? product : getProductPlaceholder();
@@ -128,6 +128,7 @@ export function ProductCard({
           </Text>
         </Button>
       )}
+    <AddToWishlist productId={product.id} variantId={firstVariant.id}/>  
     </div>
   );
 }
