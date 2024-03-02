@@ -8,33 +8,57 @@ import 'slick-carousel/slick/slick-theme.css';
 export function ProductSlider({media, className}) {
    const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
-  let sliderRef1 = useRef(null);
-  let sliderRef2 = useRef(null);
-useEffect(() => {
-    setNav1(sliderRef1);
-    setNav2(sliderRef2);
-  }, []);
+  const [slider1, setSlider1] = useState(null);
+  const [slider2, setSlider2] = useState(null);
+
+  useEffect(() => {
+
+    setNav1(slider1);
+    setNav2(slider2);
+
+  });
+   const settingsMain = {
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+    fade: true,
+    asNavFor: '.slider-nav'
+
+  };
+
+  const settingsThumbs = {
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    asNavFor: '.slider-for',
+    dots: true,
+    centerMode: true,
+    swipeToSlide: true,
+    focusOnSelect: true,
+    nextArrow: (
+      <div>
+       <IconCaret direction='left'/>
+      </div>
+    ),
+    prevArrow: (
+      <div>
+        <IconCaret direction='right'/>
+      </div>
+    )
+  };
 return(
   <div className="slider-container">
      
-      <Slider asNavFor={nav2} ref={slider => (sliderRef1 = slider)}>
+      <Slider {...settingsMain}
+          asNavFor={nav2}
+          ref={slider => (setSlider1(slider))}>
         {media.map((med, i) => {
-        const isFirst = i === 0;
-        const isFourth = i === 3;
-        const isFullWidth = i % 3 === 0;
-
         const image =
           med.__typename === 'MediaImage'
             ? {...med.image, altText: med.alt || 'Product image'}
             : null;
 
-        const style = [
-          isFullWidth ? 'md:col-span-2' : 'md:col-span-1',
-          isFirst || isFourth ? '' : 'md:aspect-[4/5]',
-          'aspect-square snap-center card-image bg-white dark:bg-contrast/10 w-mobileGallery md:w-full',
-        ].join(' ');
-
         return (
+          
             <div key={med.id || image?.id}>
            
             {image && (
@@ -45,40 +69,28 @@ return(
       })}
         
       </Slider>
-      
+      <div className="thumbnail-slider-wrap">
       <Slider
-        asNavFor={nav1}
-        ref={slider => (sliderRef2 = slider)}
-        slidesToShow={3}
-        swipeToSlide={true}
-        focusOnSelect={true}
+         {...settingsThumbs}  asNavFor={nav1}
+            ref={slider => (setSlider2(slider))}
       >
        {media.map((med, i) => {
-        const isFirst = i === 0;
-        const isFourth = i === 3;
-        const isFullWidth = i % 3 === 0;
-
         const image =
           med.__typename === 'MediaImage'
             ? {...med.image, altText: med.alt || 'Product image'}
             : null;
 
-        const style = [
-          isFullWidth ? 'md:col-span-2' : 'md:col-span-1',
-          isFirst || isFourth ? '' : 'md:aspect-[4/5]',
-          'aspect-square snap-center card-image bg-white dark:bg-contrast/10 w-mobileGallery md:w-full',
-        ].join(' ');
-
         return (
             <div key={med.id || image?.id}>
            
             {image && (
-             <img src={image.url} height="70" width="90" className='md:aspect-[4/5]' />
+             <img src={image.url} className='md:aspect-[4/5]' />
             )}
          </div>
         );
       })}
       </Slider>
+     </div> 
     </div>
   )
 }

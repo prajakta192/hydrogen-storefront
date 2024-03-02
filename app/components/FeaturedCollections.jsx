@@ -15,7 +15,7 @@ export function FeaturedCollections({
   const collectionsWithImage = collections.nodes.filter((item) => item.image);
 
   return (
-    <Section {...props} heading={title}>
+    <Section {...props} heading={title} style={{display:'none'}}>
     <Heading size="copy">title</Heading>
       <Grid items={collectionsWithImage.length}>
         {collectionsWithImage.map((collection) => {

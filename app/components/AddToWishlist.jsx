@@ -3,7 +3,7 @@ import {Text, Button} from '~/components';
 export function AddToWishlist ({productId,variantId}){
 	console
  	const iWishUrl = 'https://api.myshopapps.com/iwish/V1';
-	let iWishCust = 0;
+	let iWishCust = '3789951533090';
 
  async function requestToSever(page, body, method = 'POST') {
  debugger;
@@ -13,7 +13,7 @@ export function AddToWishlist ({productId,variantId}){
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       domain: 'testnewshopify.myshopify.com',
-      Authorization: ''
+     
     },
     body: new URLSearchParams(body),
   };

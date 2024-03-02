@@ -108,10 +108,11 @@ p.announcement-bar__message{
   margin: 0;
   height: 100%;
   z-index: 2;
+  color: black;
 }
 .footer-block--newsletter .newsletter-form__field-wrapper  .field__button {
   top: 0;
-  right: 42%;
+  right: 13%;
 }
 .newsletter-form__button .icon{
   width: 1rem;
@@ -123,7 +124,7 @@ p.announcement-bar__message{
 @media(min-width:48em){
     .footer-block--newsletter .newsletter-form__field-wrapper .lg-field__butto{
     top: 0;
-    right: 5%;
+    right: 4%;
     }
 }
 
@@ -132,12 +133,34 @@ p.announcement-bar__message{
     grid-template-columns: 60% auto;
   }
 }
-.slick-slide img {
-    margin: auto;
-    width: 50%;
-    height: 50%;
+.slider-container{
+  overflow: hidden;
+}
+.thumbnail-slider-wrap {
+  margin-top: 15px;
+  position: relative;
+}
+.thumbnail-slider-wrap .slick-track .slick-slide {
+  text-align: center;
+}
+.thumbnail-slider-wrap .slick-track .slick-slide img {
+  width: 70%;
 }
 
+.slick-next:before,
+.slick-prev:before {
+  display: none!important;
+  color: black!important;
+}
+.slick-next, .slick-prev{
+  color: black!important;
+}
+.slick-prev{
+  left: 19px!important;
+}
+.slick-next{
+  right: 0px!important;
+}
   body {
   }
 

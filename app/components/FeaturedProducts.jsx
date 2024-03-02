@@ -41,7 +41,7 @@ export function FeaturedProducts({
   return (
     <>
      <Heading format size="copy" className="t-4">
-        {heading} hello
+        {heading}
       </Heading>
       
       <div

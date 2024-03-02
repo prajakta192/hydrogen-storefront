@@ -140,10 +140,10 @@ export default function Product() {
     <>
       <Section className="px-0 md:px-8 lg:px-12">
         <div className="grid items-start md:gap-6 lg:gap-20  grid-different-size">
-         {/* <ProductSlider 
+          <ProductSlider 
             media={media.nodes}md:mx-auto md:max-w-sm
             className="w-full lg:col-span-1"
-          />*/}
+          />
           <div className="sticky md:-mb-nav md:top-nav md:-translate-y-nav md:h-screen md:pt-nav hiddenScroll md:overflow-y-scroll">
             <section className="flex flex-col w-full max-w-xl gap-8 p-6 md:mx-auto md:max-w-sm md:px-0 product-details-header">
               <div className="grid gap-2">
