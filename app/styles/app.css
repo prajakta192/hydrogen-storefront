@@ -147,19 +147,22 @@ p.announcement-bar__message{
   width: 70%;
 }
 
-.slick-next:before,
-.slick-prev:before {
+.thumbnail-slider-wrap .slick-next:before,
+.thumbnail-slider-wrap .slick-prev:before {
   display: none!important;
+  color: unset!important;
+}
+.thumbnail-slider-wrap .slick-next, .thumbnail-slider-wrap .slick-prev{
   color: black!important;
 }
-.slick-next, .slick-prev{
-  color: black!important;
+.thumbnail-slider-wrap .slick-prev{
+  left: 0px!important;
 }
-.slick-prev{
-  left: 19px!important;
-}
-.slick-next{
+.thumbnail-slider-wrap .slick-next{
   right: 0px!important;
+}
+.thumbnail-slider-wrap .slick-list{
+  padding-left: 25px;
 }
   body {
   }

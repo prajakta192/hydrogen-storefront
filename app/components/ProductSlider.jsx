@@ -27,21 +27,21 @@ export function ProductSlider({media, className}) {
   };
 
   const settingsThumbs = {
-    slidesToShow: 3,
+    slidesToShow: 4,
     slidesToScroll: 1,
     asNavFor: '.slider-for',
-    dots: true,
-    centerMode: true,
+    dots: false,
+    centerMode: false,
     swipeToSlide: true,
     focusOnSelect: true,
     nextArrow: (
-      <div>
-       <IconCaret direction='left'/>
+      <div >
+       <IconCaret className='w-7 h-7' direction='left'/>
       </div>
     ),
     prevArrow: (
-      <div>
-        <IconCaret direction='right'/>
+      <div >
+        <IconCaret className='w-7 h-7' direction='right'/>
       </div>
     )
   };
