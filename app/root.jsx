@@ -83,6 +83,7 @@ export const useRootLoaderData = () => {
  * @param {LoaderFunctionArgs}
  */
 export async function loader({request, context}) {
+
   const {session, storefront, cart} = context;
   const [customerAccessToken, layout] = await Promise.all([
     session.get('customerAccessToken'),
@@ -102,6 +103,8 @@ export async function loader({request, context}) {
     },
     seo,
   });
+
+
 }
 
 export default function App() {
@@ -110,7 +113,7 @@ export default function App() {
   const data = useLoaderData();
   const locale = data.selectedLocale ?? DEFAULT_LOCALE;
   const hasUserConsent = true;
-//console.log('data',data)
+
   useAnalytics(hasUserConsent);
 
   return (

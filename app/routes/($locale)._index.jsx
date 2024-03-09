@@ -16,7 +16,7 @@ export const headers = routeHeaders;
  */
 export async function loader({params, context}) {
   const {language, country} = context.storefront.i18n;
-
+  
   if (
     params.locale &&
     params.locale.toLowerCase() !== `${language}-${country}`.toLowerCase()
@@ -76,6 +76,7 @@ export async function loader({params, context}) {
     },
     seo,
   });
+   return { storefrontToken: context.env.REACT_APP_DRAWERCLASSES }
 }
 
 export default function Homepage() {
@@ -86,8 +87,9 @@ export default function Homepage() {
     tertiaryHero,
     featuredCollections,
     featuredProducts,
+    storefrontToken
   } = useLoaderData();
-
+console.log(storefrontToken)
   // TODO: skeletons vs placeholders
   const skeletons = getHeroPlaceholder([{}, {}, {}]);
 

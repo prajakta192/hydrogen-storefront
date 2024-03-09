@@ -79,6 +79,8 @@ export function ProductCard({
             >
               {cardLabel}
             </Text>
+         
+            <AddToWishlist productId={product.id} variantId={firstVariant.id}/>
           </div>
           <div className="grid gap-1">
             <Text
@@ -128,7 +130,7 @@ export function ProductCard({
           </Text>
         </Button>
       )}
-    <AddToWishlist productId={product.id} variantId={firstVariant.id}/>  
+      
     </div>
   );
 }
