@@ -76,7 +76,7 @@ export async function loader({params, context}) {
     },
     seo,
   });
-   return { storefrontToken: context.env.REACT_APP_DRAWERCLASSES }
+   
 }
 
 export default function Homepage() {
@@ -87,9 +87,8 @@ export default function Homepage() {
     tertiaryHero,
     featuredCollections,
     featuredProducts,
-    storefrontToken
   } = useLoaderData();
-console.log(storefrontToken)
+
   // TODO: skeletons vs placeholders
   const skeletons = getHeroPlaceholder([{}, {}, {}]);
 
